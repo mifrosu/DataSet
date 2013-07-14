@@ -15,4 +15,6 @@
 # temporary files
 ~*
 *.swp
+CMakeLists.txt.user
+
 
