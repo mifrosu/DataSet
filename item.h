@@ -1,6 +1,8 @@
 #ifndef BASE_ITEM_H
 #define BASE_ITEM_H
 
+#include <string>
+
 namespace mos_dataset {
 
 class Item
@@ -34,4 +36,4 @@ class DoubleItem : public Item
 
 }   // namespace
 
-#endif BASE_ITEM_H
+#endif  // BASE_ITEM_H

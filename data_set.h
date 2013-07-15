@@ -13,11 +13,21 @@ class DataSet
 {
 
 public:
-    DataSet(const std::vector<std::string> headerList);
+
+    DataSet();
+    DataSet(const std::string& fileName, const char* delimiter="\t");
+
+    void addFile(const std::string& fileName, const char* delimiter="\t");
 
     std::vector<std::string> getHeader() const;
 
 private:
+
+    void addHeader(const std::string& headerLine);
+    void addRow(const std::string& lineIn);
+
+
+
 
     enum column_type
     {

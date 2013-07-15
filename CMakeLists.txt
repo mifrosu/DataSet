@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(data_set)
 
-set(PROJECT_SRCS main.cpp data_set.cpp item.cpp)
+set(PROJECT_SRCS main.cpp data_set.cpp item.cpp split_string.h)
 
 add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 add_definitions(--std=c++11)
@@ -22,5 +22,6 @@ if (build_tests)    # cmake -Dbuild_tests=BOOL:ON <path>
 
     # a target binary directory is specified for out of tree sources
     add_subdirectory($ENV{GTEST_ROOT} ${CMAKE_CURRENT_BINARY_DIR}/gtest)
+    #add_subdirectory($ENV{GMOCK_ROOT} ${CMAKE_CURRENT_BINARY_DIR}/gmock)
 endif()
 
