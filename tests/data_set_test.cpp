@@ -29,3 +29,21 @@ class DataSetTest : public ::testing::Test
   * Read subsequent lines to create entries
   *
   */
+
+TEST_F(DataSetTest, InitializeDataSet)
+{
+    // C++11 version
+    // std::vector<std::string> testList = {"ID=1, ... }
+    std::string testArray[] = {"ID=1", "Molecule", "Solubility=2",
+                               "Molecular Weight=2"};
+    std::vector<std::string> testList(testArray, testArray + 4);
+
+    DataSet testDataSet = DataSet(testList);
+    std::vector<std::string> outList = testDataSet.getHeader();
+    int k = testList.size();
+    for (int i = 0; i < k; ++i)
+    {
+        ASSERT_EQ(testList[i], outList[i]);
+    }
+
+}
