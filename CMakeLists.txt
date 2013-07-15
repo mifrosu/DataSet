@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 2.8)
 project(data_set)
 
-set(PROJECT_SRCS main.cpp data_set.cpp)
+set(PROJECT_SRCS main.cpp data_set.cpp item.cpp)
 
 add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
+add_definitions(--std=c++11)
 
 option(build_tests "Build the project's unit tests" OFF)
 
 if (build_tests)    # cmake -Dbuild_tests=BOOL:ON <path>
     add_subdirectory(tests)
     if(DEFINED ENV{GTEST_ROOT})
+    # e.g.(Linux) export GTEST_ROOT=/home/michael/gtest/gtest-1.6.0
         message("... using gtest found in $ENV{GTEST_ROOT}")
     ELSE()
         message("GTEST_ROOT is not defined. You must tell CMAKE where to find
