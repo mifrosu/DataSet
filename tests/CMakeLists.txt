@@ -1,22 +1,21 @@
 set(test_EXECUTABLE data_set_test)
 
 include_directories(
+    ${data_set_SOURCE_DIR}
     $ENV{GTEST_ROOT}/include
     $ENV{GTEST_ROOT}
 #    $ENV{GMOCK_ROOT}/include
 #    $ENV{GMOCK_ROOT}
 )
 
-add_executable(${test_EXECUTABLE}
-               split_string_test.cpp data_set_test.cpp
+add_executable(${test_EXECUTABLE} split_string_test.cpp
+               ${PROJECT_SOURCE_DIR}/data_set.cpp
               )
 
 target_link_libraries(${test_EXECUTABLE}
-                      pthread
-)
-target_link_libraries(${test_EXECUTABLE}
                       gtest
                       gtest_main
+                      pthread
                      )
 #target_link_libraries(${test_EXECUTABLE}
 #                      gmock

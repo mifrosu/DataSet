@@ -1,7 +1,9 @@
-#include "../split_string.h"
+#include "../data_set.h"
+#include <string>
+#include <vector>
 #include <gtest/gtest.h>
 
-using namespace mos_dataset;
+using namespace mos;
 
 class SplitStringTest : public ::testing::Test
 {
@@ -33,7 +35,7 @@ public:
 
 TEST_F(SplitStringTest, SplitTabSeparated)
 {
-    std::string testLine("hello\tWorld!");
+    std::string testLine = "hello\tWorld!";
     std::vector<std::string> testStore;
     split(testLine, &testStore);
     if (testStore.size() > 1) {

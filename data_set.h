@@ -5,8 +5,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <functional>
 
-namespace mos_dataset
+namespace mos
 {
 
 class DataSet
@@ -25,9 +26,6 @@ private:
 
     void addHeader(const std::string& headerLine);
     void addRow(const std::string& lineIn);
-
-
-
 
     enum column_type
     {
@@ -54,9 +52,8 @@ private:
     std::vector<itemVector> dataSet;
 };
 
-
-
-
+void split(const std::string& inString, std::vector<std::string>* store,
+           char delimiter='\t');
 
 }   // namespace
 

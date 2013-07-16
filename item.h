@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace mos_dataset {
+namespace mos {
 
 class Item
 {

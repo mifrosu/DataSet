@@ -1,4 +1,5 @@
 #include <iostream>
+#include "data_set.h"
 
 /**
  *
@@ -16,6 +17,11 @@
 
 int main()
 {
+
+    std::string test = "Hi\tthere";
+    std::vector<std::string> testVector;
+    mos::split(test, &testVector);
     std::cout << "Hello, World!" << std::endl;
+    std::cout << testVector[0] << " " << testVector[1] << std::endl;
     return 0;
 }

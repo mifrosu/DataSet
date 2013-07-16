@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(data_set)
 
-set(PROJECT_SRCS main.cpp data_set.cpp item.cpp split_string.h)
+set(project_SRCS main.cpp data_set.cpp item.cpp)
 
-add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
-add_definitions(--std=c++11)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+add_executable(${PROJECT_NAME} ${project_SRCS})
 
 option(build_tests "Build the project's unit tests" OFF)
 
