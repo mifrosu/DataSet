@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <cctype>       // isspace
 
 namespace mos
 {
@@ -52,8 +53,15 @@ private:
     std::vector<itemVector> dataSet;
 };
 
+// non-member, non-friend functions
+
 void split(const std::string& inString, std::vector<std::string>* store,
            char delimiter='\t');
+
+/// in-place strip terminal whitespace
+void strip(std::string* inString);
+void stripEnd(std::string* inString);
+void stripBegin(std::string* inString);
 
 }   // namespace
 

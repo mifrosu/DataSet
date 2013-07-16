@@ -8,7 +8,7 @@ include_directories(
 #    $ENV{GMOCK_ROOT}
 )
 
-add_executable(${test_EXECUTABLE} split_string_test.cpp
+add_executable(${test_EXECUTABLE} string_clean_test.cpp
                ${PROJECT_SOURCE_DIR}/data_set.cpp
               )
 
