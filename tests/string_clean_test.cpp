@@ -47,10 +47,10 @@ TEST_F(StringCleanTest, SplitCommanSeparated)
 {
     std::string testLine = "hello, World!";
     std::vector<std::string> testStore;
-    split(testLine, &testStore, ',');
+    split(testLine, &testStore, ",");
     ASSERT_EQ(2, testStore.size());
     ASSERT_EQ("hello", testStore[0]);
-    ASSERT_EQ(" World!", testStore[1]);
+    ASSERT_EQ("World!", testStore[1]);
 }
 
 TEST_F(StringCleanTest, StripWhiteSpace)

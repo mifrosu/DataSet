@@ -1,10 +1,27 @@
 #include "data_set.h"
+#include <fstream>
 #include <iostream>
 
 namespace mos {
 
+DataSet::DataSet(const std::string& fileName, const char* delimiter)
+{
+    std::ifstream inFileStream(fileName.c_str());
+    if (!inFileStream) {
+        std::cerr << fileName << " can not be accessed." << std::endl;
+    }
+    std::string inHeader;
+    getline(inFileStream, inHeader);
+    split(inHeader, &headerList, delimiter);
+}
+
+std::vector<std::string> DataSet::getHeader() const
+{
+    return headerList;
+}
+
 void split(const std::string& inString, std::vector<std::string>* store,
-           char delimiter)
+           const char* delimiter)
 {
     if (inString.size() == 0) {
         return;
@@ -19,12 +36,16 @@ void split(const std::string& inString, std::vector<std::string>* store,
     }
 
     while (j != std::string::npos) {
-        store->push_back(inString.substr(i, j-i));
+        std::string temp = inString.substr(i, j-i);
+        strip(&temp);
+        store->push_back(temp);
         i = ++j;
         j = inString.find(delimiter, j);
 
         if (j == std::string::npos) {
-            store->push_back(inString.substr(i, inString.length()));
+            temp = inString.substr(i, inString.length());
+            strip(&temp);
+            store->push_back(temp);
         }
     }
 }

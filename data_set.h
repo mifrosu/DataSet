@@ -56,7 +56,7 @@ private:
 // non-member, non-friend functions
 
 void split(const std::string& inString, std::vector<std::string>* store,
-           char delimiter='\t');
+           const char* delimiter="\t");
 
 /// in-place strip terminal whitespace
 void strip(std::string* inString);

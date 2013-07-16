@@ -9,7 +9,8 @@ include_directories(
 )
 
 add_executable(${test_EXECUTABLE} string_clean_test.cpp
-               ${PROJECT_SOURCE_DIR}/data_set.cpp
+                      data_set_test.cpp
+                      ${PROJECT_SOURCE_DIR}/data_set.cpp
               )
 
 target_link_libraries(${test_EXECUTABLE}
