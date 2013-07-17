@@ -13,6 +13,7 @@ class Item
 public:
     virtual ~Item();
     unsigned int type;
+    virtual unsigned int size() = 0;
 };
 
 template <typename T>
@@ -22,6 +23,7 @@ public:
     std::vector<T> data;
     T getDatum(unsigned int index);
     void push_back(T value);
+    unsigned int size();
 
 };
 
@@ -38,6 +40,12 @@ template <typename T>
 void Column<T>::push_back(T value)
 {
     data.push_back(value);
+}
+
+template <typename T>
+unsigned int Column<T>::size()
+{
+    return data.size();
 }
 
 typedef Column<std::string> StringColumn;

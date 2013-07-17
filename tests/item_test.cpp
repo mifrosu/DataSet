@@ -15,6 +15,7 @@ public:
     virtual void SetUp()
     {
 
+
     }
 
     virtual void TearDown()
@@ -42,4 +43,28 @@ TEST_F(ItemTest, DoubleColumnPushGetTest)
     DoubleColumn testColumn;
     testColumn.push_back(2.71828);
     ASSERT_DOUBLE_EQ(2.71828, testColumn.getDatum(0));
+}
+
+TEST_F(ItemTest, StringColumnSizeTest)
+{
+    StringColumn testColumn;
+    testColumn.push_back("Hello");
+    testColumn.push_back("Goodbye");
+    ASSERT_EQ(2, testColumn.size());
+}
+
+TEST_F(ItemTest, IntColumnSizeTest)
+{
+    IntColumn testColumn;
+    testColumn.push_back(42);
+    ASSERT_EQ(1, testColumn.size());
+}
+
+TEST_F(ItemTest, DoubleColumnSizeTest)
+{
+    DoubleColumn testColumn;
+    testColumn.push_back(2.71828);
+    testColumn.push_back(3.14159);
+    testColumn.push_back(8.31451);
+    ASSERT_EQ(3, testColumn.size());
 }
