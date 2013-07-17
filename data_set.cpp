@@ -21,8 +21,6 @@ std::vector<std::string> DataSet::getHeader() const
     return headerList;
 }
 
-
-
 void DataSet::displaySet(std::ostream &os, const char* delimiter)
 {
     if (headerList.size() >= 1) {
@@ -35,12 +33,12 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
     }
 
     if (dataSet.size() >= 1) {
-        int rowLength = dataSet.size();
+        unsigned int rowLength = dataSet.size();
         if (dataSet[0]->size() > 0) {
-            int columnDepth = dataSet[0]->size();
+            unsigned int columnDepth = dataSet[0]->size();
             for (unsigned int c = 0; c != columnDepth; ++c) {
                 for (unsigned int r = 0; r != rowLength; ++r) {
- //                   os << dataSet[c][r] << delimiter;
+                    os << dataSet[0]->getRepr(r) << delimiter;
                 }
             }
         }

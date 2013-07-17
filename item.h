@@ -5,6 +5,7 @@
 #include <vector>
 #include <ostream>
 #include <cassert>
+#include <sstream>
 
 namespace mos {
 
@@ -14,6 +15,7 @@ public:
     virtual ~Item();
     unsigned int type;
     virtual unsigned int size() = 0;
+    virtual std::string getRepr(unsigned int index) = 0;
 };
 
 template <typename T>
@@ -24,6 +26,7 @@ public:
     T getDatum(unsigned int index);
     void push_back(T value);
     unsigned int size();
+    std::string getRepr(unsigned int index);
 
 };
 
@@ -34,6 +37,15 @@ T Column<T>::getDatum(unsigned int index)
     if (index < data.size()) {
         return data[index];
     }
+}
+
+template <typename T>
+std::string Column<T>::getRepr(unsigned int index)
+{
+    assert(index < data.size());
+    std::stringstream ss;
+    ss << data[index];
+    return ss.str();
 }
 
 template <typename T>

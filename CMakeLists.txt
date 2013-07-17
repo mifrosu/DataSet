@@ -3,7 +3,7 @@ project(data_set)
 
 set(project_SRCS main.cpp data_set.cpp item.cpp)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
 add_executable(${PROJECT_NAME} ${project_SRCS})
 

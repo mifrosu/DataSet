@@ -33,6 +33,8 @@ private:
     void processHeader();
     void insertColumn(int columnType);
 
+    std::string getDatum(std::shared_ptr<Item> cellPtr,
+                         unsigned int index);
     enum columnTypeEnums
     {
         STRING = 0, INT = 1, DOUBLE = 2
