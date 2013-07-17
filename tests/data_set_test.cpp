@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdio>
 #include <gtest/gtest.h>
+#include <iostream>
 
 using namespace mos;
 
@@ -48,8 +49,10 @@ TEST_F(DataSetTest, InitializeDataSet)
     testFileStream << testHead << std::endl;
     testFileStream.close();
 
-    DataSet testDataSet = DataSet(testFile, ",");
+    DataSet testDataSet = DataSet(testFile,",");
+
     std::vector<std::string> testOutHeader = testDataSet.getHeader();
+    testDataSet.displaySet(std::cout,",");
 
     ASSERT_EQ("ID=1", testOutHeader[0]);
     ASSERT_EQ("Molecule", testOutHeader[1]);

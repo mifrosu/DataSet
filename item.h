@@ -2,37 +2,58 @@
 #define BASE_ITEM_H
 
 #include <string>
+#include <vector>
+#include <ostream>
 
 namespace mos {
 
-class Item
+struct Item
 {
-public:
-
     virtual ~Item();
-    int type;
-    int currentIndex;
-    int futureIndex;
-
-private:
-    Item();
+    unsigned type;
 };
 
-class StringItem : public Item
+template <typename T>
+struct Column : public Item
 {
-    std::string datum;
-
+    std::vector<T> data;
 };
 
-class IntItem : public Item
-{
-    int datum;
-};
 
-class DoubleItem : public Item
-{
-    double datum;
-};
+//class Item
+//{
+//public:
+
+//    virtual ~Item();
+//    int type;
+//    int currentIndex;
+//    int futureIndex;
+
+//private:
+//    Item();
+//};
+
+//class StringItem : public Item
+//{
+//public:
+//    StringItem();
+//    std::vector<std::string> column;
+
+//};
+
+//class IntItem : public Item
+//{
+//public:
+//    IntItem();
+//    std::vector<int> column;
+//};
+
+//class DoubleItem : public Item
+//{
+//public:
+//    DoubleItem();
+//    std::vector<double> column;
+//};
 
 }   // namespace
 

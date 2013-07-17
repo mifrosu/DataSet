@@ -5,7 +5,8 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <functional>
+#include <ostream>
+//#include <functional>
 #include <cctype>       // isspace
 
 namespace mos
@@ -23,12 +24,16 @@ public:
 
     std::vector<std::string> getHeader() const;
 
+    void displaySet(std::ostream& os, const char* delimiter="\t");
+
 private:
 
     void addHeader(const std::string& headerLine);
     void addRow(const std::string& lineIn);
+    void processHeader();
+    void insertColumn(int columnType);
 
-    enum column_type
+    enum columnTypeEnums
     {
         STRING = 0, INT = 1, DOUBLE = 2
     };
@@ -44,13 +49,13 @@ private:
      * Each derived Item object will hold a datum, corresponding
      * to a table cell. ItemVector corresponds to a table column.
      */
-    typedef std::vector<std::shared_ptr<Item> > itemVector;
+    typedef std::shared_ptr<Item> itemVectorPtr;
 
     /**
      * @brief dataSet
      * dataSet represents the table data.
      */
-    std::vector<itemVector> dataSet;
+    std::vector<itemVectorPtr> dataSet;
 };
 
 // non-member, non-friend functions

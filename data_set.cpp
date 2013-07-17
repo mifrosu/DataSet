@@ -13,11 +13,71 @@ DataSet::DataSet(const std::string& fileName, const char* delimiter)
     std::string inHeader;
     getline(inFileStream, inHeader);
     split(inHeader, &headerList, delimiter);
+    processHeader();
 }
 
 std::vector<std::string> DataSet::getHeader() const
 {
     return headerList;
+}
+
+
+
+void DataSet::displaySet(std::ostream &os, const char* delimiter)
+{
+    if (headerList.size() >= 1) {
+        std::vector<std::string>::const_iterator iter;
+        for (iter = headerList.begin(); iter != headerList.end();
+             ++iter) {
+            os << *iter << delimiter;
+        }
+        os << std::endl;
+    }
+
+//    if (dataSet.size() >= 1) {
+//        int rowLength = dataSet.size();
+//        if (dataSet[0]->size() > 0) {
+//            int columnDepth = dataSet[0]->size();
+//            for (unsigned int c = 0; c != columnDepth; ++c) {
+//                for (unsigned int r = 0; r != rowLength; ++r) {
+//                    os << dataSet[c][r] << delimiter;
+//                }
+//            }
+//        }
+//        os << std::endl;
+//    }
+}
+
+void DataSet::processHeader()
+{
+    if (headerList.size() > 0) {
+        std::vector<std::string>::const_iterator iter;
+        std::vector<std::string>::const_iterator iterEnd = headerList.end();
+        for (iter = headerList.begin(); iter != iterEnd; ++iter) {
+            if ((*iter).size() > 2) {
+                int k = iter->size();
+                if ((*iter)[k-2] == '=') {
+                    std::cout << (*iter)[k-1];
+                }
+                std::cout << (*iter)[k-2];
+            }
+            std::cout << std::endl;
+        }
+    }
+}
+
+void DataSet::insertColumn(int columnType)
+{
+    switch (columnType) {
+    default:
+
+//        std::shared_ptr<Item> cell(new StringItem);
+//        std::shared_ptr<std::vector<std::shared_ptr<Item> column(
+//                    new std::vector<StringItem>);
+//        column->push_back(cell);
+//        dataSet.push_back(column);
+        break;
+    }
 }
 
 void split(const std::string& inString, std::vector<std::string>* store,
