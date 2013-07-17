@@ -1,6 +1,8 @@
 #include "data_set.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
+#include <cassert>
 
 namespace mos {
 
@@ -46,37 +48,47 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
     }
 }
 
+void DataSet::addColumn(const unsigned int type)
+{
+    switch (type) {
+    case INT:
+        dataSet.push_back(std::make_shared<IntColumn>());
+        break;
+    case DOUBLE:
+        dataSet.push_back(std::make_shared<DoubleColumn>());
+        break;
+    default:
+        dataSet.push_back(std::make_shared<StringColumn>());
+        break;
+    }
+}
+
 void DataSet::processHeader()
 {
     if (headerList.size() > 0) {
         std::vector<std::string>::const_iterator iter;
         std::vector<std::string>::const_iterator iterEnd = headerList.end();
         for (iter = headerList.begin(); iter != iterEnd; ++iter) {
-            if ((*iter).size() > 2) {
-                int k = iter->size();
-                if ((*iter)[k-2] == '=') {
-                    std::cout << (*iter)[k-1];
+            assert((*iter).size() > 2);
+            unsigned int k = iter->size();
+            if ((*iter)[k-2] == '=') {
+                std::stringstream inValue;
+                inValue << (*iter)[k-1];
+                unsigned int typeId;
+                inValue >> typeId;
+                if (typeId <= 2) {
+                    addColumn(typeId);
                 }
-                std::cout << (*iter)[k-2];
             }
+            else {
+                addColumn(STRING);
+            }
+            std::cout << (*iter)[k-2];
             std::cout << std::endl;
         }
     }
 }
 
-void DataSet::insertColumn(int columnType)
-{
-    switch (columnType) {
-    default:
-
-//        std::shared_ptr<Item> cell(new StringItem);
-//        std::shared_ptr<std::vector<std::shared_ptr<Item> column(
-//                    new std::vector<StringItem>);
-//        column->push_back(cell);
-//        dataSet.push_back(column);
-        break;
-    }
-}
 
 void split(const std::string& inString, std::vector<std::string>* store,
            const char* delimiter)

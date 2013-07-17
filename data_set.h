@@ -30,8 +30,8 @@ private:
 
     void addHeader(const std::string& headerLine);
     void addRow(const std::string& lineIn);
+    void addColumn(const unsigned int type);
     void processHeader();
-    void insertColumn(int columnType);
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
                          unsigned int index);
@@ -47,9 +47,9 @@ private:
     std::vector<std::string> headerList;
 
     /**
-     * @brief itemVector
+     * @brief itemVectorPtr
      * Each derived Item object will hold a datum, corresponding
-     * to a table cell. ItemVector corresponds to a table column.
+     * to a table cell. ItemVectorPtr corresponds to a table column.
      */
     typedef std::shared_ptr<Item> itemVectorPtr;
 
