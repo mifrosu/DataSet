@@ -4,20 +4,45 @@
 #include <string>
 #include <vector>
 #include <ostream>
+#include <cassert>
 
 namespace mos {
 
-struct Item
+class Item
 {
+public:
     virtual ~Item();
-    unsigned type;
+    unsigned int type;
 };
 
 template <typename T>
-struct Column : public Item
+class Column : public Item
 {
+public:
     std::vector<T> data;
+    T getDatum(unsigned int index);
+    void push_back(T value);
+
 };
+
+template <typename T>
+T Column<T>::getDatum(unsigned int index)
+{
+    assert(index < data.size());
+    if (index < data.size()) {
+        return data[index];
+    }
+}
+
+template <typename T>
+void Column<T>::push_back(T value)
+{
+    data.push_back(value);
+}
+
+typedef Column<std::string> StringColumn;
+typedef Column<int> IntColumn;
+typedef Column<double> DoubleColumn;
 
 
 //class Item

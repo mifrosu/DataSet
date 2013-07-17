@@ -1,7 +1,7 @@
 #include "../data_set.h"
+#include <gtest/gtest.h>
 #include <fstream>
 #include <cstdio>
-#include <gtest/gtest.h>
 #include <iostream>
 
 using namespace mos;
