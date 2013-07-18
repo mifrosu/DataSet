@@ -23,6 +23,7 @@ public:
     void addFile(const std::string& fileName, const char* delimiter="\t");
 
     std::vector<std::string> getHeader() const;
+    std::vector<std::string> getRow() const;
 
     void displaySet(std::ostream& os, const char* delimiter="\t");
 

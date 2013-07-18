@@ -12,15 +12,35 @@ DataSet::DataSet(const std::string& fileName, const char* delimiter)
     if (!inFileStream) {
         std::cerr << fileName << " can not be accessed." << std::endl;
     }
-    std::string inHeader;
-    getline(inFileStream, inHeader);
-    split(inHeader, &headerList, delimiter);
-    processHeader();
+    else {
+        headerList.push_back("UNIQUE_KEY=1");
+        std::string inHeader;
+        getline(inFileStream, inHeader);
+        split(inHeader, &headerList, delimiter);
+        processHeader();
+    }
+
 }
 
 std::vector<std::string> DataSet::getHeader() const
 {
     return headerList;
+}
+
+std::vector<std::string> DataSet::getRow() const
+{
+    std::vector<std::string> thisRow;
+    return thisRow;
+
+}
+
+void DataSet::addRow(const std::string &lineIn)
+{
+    // You are here!
+    // need convert string -> int, double
+    // what to place if data is missing or wrong?
+    // NaN for numbers, blank for strings?
+
 }
 
 void DataSet::displaySet(std::ostream &os, const char* delimiter)
