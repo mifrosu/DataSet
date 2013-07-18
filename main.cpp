@@ -1,5 +1,6 @@
 #include <iostream>
 #include "data_set.h"
+#include "string_clean.h"
 
 /**
  *

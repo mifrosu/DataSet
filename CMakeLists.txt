@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(data_set)
 
-set(project_SRCS main.cpp data_set.cpp item.cpp)
+set(project_SRCS main.cpp data_set.cpp item.cpp string_clean.cpp)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 

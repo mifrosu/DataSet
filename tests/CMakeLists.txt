@@ -13,6 +13,7 @@ add_executable(${test_EXECUTABLE} string_clean_test.cpp
                       item_test.cpp
                       ${PROJECT_SOURCE_DIR}/data_set.cpp
                       ${PROJECT_SOURCE_DIR}/item.cpp
+                      ${PROJECT_SOURCE_DIR}/string_clean.cpp
               )
 
 target_link_libraries(${test_EXECUTABLE}
