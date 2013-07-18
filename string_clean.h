@@ -16,6 +16,20 @@ void strip(std::string* inString);
 void stripEnd(std::string* inString);
 void stripBegin(std::string* inString);
 
+template <typename T>
+std::string convertToString(T)
+{
+    std::string outValue;
+    return outValue;
+
+}
+
+//                std::stringstream inValue;
+//                inValue << (*iter)[k-1];
+//                unsigned int typeId;
+//                inValue >> typeId;
+
+
 } //namespace
 
 #endif      // "STRING_CLEAN_H"

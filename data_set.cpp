@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <cassert>
+#include <boost/lexical_cast.hpp>
 
 namespace mos {
 
@@ -93,10 +94,15 @@ void DataSet::processHeader()
             assert((*iter).size() > 2);
             unsigned int k = iter->size();
             if ((*iter)[k-2] == '=') {
-                std::stringstream inValue;
-                inValue << (*iter)[k-1];
-                unsigned int typeId;
-                inValue >> typeId;
+                unsigned int typeId = 0;
+                try {
+                    typeId = boost::lexical_cast<unsigned int>(
+                                (*iter)[k-1]);
+                }
+                catch (boost::bad_lexical_cast& e) {
+                    std::cerr << "Problem cast: " << e.what() << std::endl;
+                }
+
                 if (typeId <= 2) {
                     addColumn(typeId);
                 }
