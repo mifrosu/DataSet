@@ -76,7 +76,7 @@ public:
     void getData(std::vector<double> &store);
 private:
     bool compareDouble (double a, double b);
-    void findValue(double value, std::vector<unsigned int>& store,
+    std::vector<unsigned int> findValue(double value,
                                  bool (*compare)(double, double));
     std::vector<double> data;
     const double epsilon = 1E-6;

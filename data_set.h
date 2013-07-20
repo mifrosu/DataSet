@@ -50,7 +50,7 @@ private:
     void addColumn(const unsigned int columnType);
     void processHeader();
 
-    void match(DataSet& other);
+    void match(DataSet& other, const std::string& columnName);
     unsigned int findHeader(const std::string& header);
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
@@ -75,7 +75,7 @@ private:
     std::vector<itemVectorPtr> dataSet;
 
     int rowCount;
-    std::map<unsigned int, unsigned int> mapBuffer;
+    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
 };
 
 // non-member, non-friend functions

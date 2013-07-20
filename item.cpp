@@ -205,6 +205,7 @@ std::vector<unsigned int> DoubleColumn::findValue(double value,
         }
         ++iter;
     }
+    return indexList;
 }
 
 void DoubleColumn::getData(std::vector<double> &store)

@@ -251,13 +251,64 @@ unsigned int DataSet::findHeader(const std::string &header)
     else {
         return std::distance(headerList.begin(),iter);
     }
-
-
 }
 
-void DataSet::match(DataSet &other)
+void DataSet::match(DataSet &other, const std::string& columnName)
 {
+    mapBuffer.clear();
+    unsigned int thisRowIndex = findHeader(columnName);
+    unsigned int otherRowIndex = other.findHeader(columnName);
 
+
+    if (thisRowIndex == unsigned(-1) ||
+            otherRowIndex == unsigned(-1)) {
+        std::cerr << "Error: " << columnName
+                  << " is not present in both sets." << std::endl;
+        return;
+    }
+    else if (dataSet[thisRowIndex]->type !=
+             other.dataSet[otherRowIndex]->type) {
+        std::cerr << "Error: Column type mismatch." << std::endl;
+    }
+    else {
+        unsigned int thisColSize = dataSet[thisRowIndex]->size();
+        //unsigned int otherColSize = other.dataSet[otherRowIndex]->size();
+        for (unsigned int thisX = 0; thisX != thisColSize; ++thisX)
+        {
+            switch (dataSet[thisRowIndex]->type) {
+
+            case INT: {  // note, we need brackets if variables are
+                         // initialized within the switch statement
+                std::vector<unsigned int> intIndexList;
+                int intValue = dataSet[thisRowIndex]->getIntDatum(thisX);
+                intIndexList =
+                        other.dataSet[otherRowIndex]->findValue(intValue);
+                // use thisUNIQUE_KEY column as map key
+                mapBuffer[dataSet[0]->getIntDatum(thisX)] = intIndexList;
+                break;
+            }
+            case DOUBLE: {
+                std::vector<unsigned int> dblIndexList;
+                double dblValue = dataSet[thisRowIndex]->getDoubleDatum(thisX);
+                dblIndexList =
+                        other.dataSet[otherRowIndex]->findValue(dblValue);
+                // use thisUNIQUE_KEY column as map key
+                mapBuffer[dataSet[0]->getIntDatum(thisX)] = dblIndexList;
+                break;
+            }
+            default: { //STRING
+                std::vector<unsigned int> stringIndexList;
+                std::string stringValue =
+                        dataSet[thisRowIndex]->getStringDatum(thisX);
+                stringIndexList =
+                        other.dataSet[otherRowIndex]->findValue(stringValue);
+                // use thisUNIQUE_KEY column as map key
+                mapBuffer[dataSet[0]->getIntDatum(thisX)] = stringIndexList;
+                break;
+            }
+            }
+        }
+    }
 }
 
 
