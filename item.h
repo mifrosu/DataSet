@@ -75,18 +75,12 @@ public:
     std::vector<unsigned int> findValue(double value);
     void getData(std::vector<double> &store);
 private:
+    bool compareDouble (double a, double b);
     std::vector<double> data;
-    const double epsilon = 1E-8;
-    struct double_compare
-    {
-        double_compare(double value, double delta) : val(value), delta(delta)
-        { }
-        inline bool operator()(const double &x) const {
-            return abs(x-val) < delta;
-        }
+    const double epsilon = 1E-6;
     private:
         double val, delta;
-    };
+
 };
 
 

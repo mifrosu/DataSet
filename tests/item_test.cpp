@@ -99,14 +99,14 @@ TEST_F(ItemTest, FindIntIndexes)
 
 TEST_F(ItemTest, FindDoubleIndexes)
 {
-    double testArray[] = {2.0, 9.0, 2.0, 9.0, 9.0, 9.0};
-    IntColumn testColumn;
+    double testArray[] = {2.0, 9.0001, 2.0, 9.0002, 9.0001, 9.0001};
+    DoubleColumn testColumn;
     for (int i=0; i != 6; ++i) {
         testColumn.push_back(testArray[i]);
     }
     std::vector<unsigned int> indexList;
-    indexList = testColumn.findValue(9);
-    std::vector<unsigned int> expectedList = {1, 3, 4, 5};
-    ASSERT_EQ(4, indexList.size());
+    indexList = testColumn.findValue(9.0001);
+    std::vector<unsigned int> expectedList = {1, 4, 5};
+    ASSERT_EQ(3, indexList.size());
     ASSERT_EQ(expectedList, indexList);
 }

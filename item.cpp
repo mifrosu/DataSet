@@ -3,6 +3,7 @@
 #include <limits>
 #include <cmath>
 #include <algorithm>
+#include <cmath>
 
 namespace mos {
 
@@ -158,6 +159,24 @@ unsigned int DoubleColumn::size() {
     return data.size();
 }
 
+bool DoubleColumn::compareDouble(double a, double b)
+{
+    if (a == b) {
+        return true;
+    }
+    else {
+        double diff = fabs(a-b);
+        if (a == 0 || b == 0 || diff < epsilon) {
+            return (diff < epsilon);
+        }
+        else {
+            double abs_a = fabs(a);
+            double abs_b = fabs(b);
+            return (diff/(abs_a + abs_b) < epsilon);
+        }
+    }
+}
+
 std::vector<unsigned int> DoubleColumn::findValue(double value)
 {
     std::vector<unsigned int> indexList;
@@ -165,11 +184,10 @@ std::vector<unsigned int> DoubleColumn::findValue(double value)
     std::vector<double>::iterator iterEnd = data.end();
 
     while(iter != iterEnd) {
-        iter = std::find_if(iter, iterEnd, double_compare(value, epsilon));
-        if (iter != iterEnd) {
+        if (compareDouble(*iter, value)) {
             indexList.push_back(std::distance(data.begin(),iter));
-            ++iter;
         }
+        ++iter;
     }
     return indexList;
 }
