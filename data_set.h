@@ -8,6 +8,7 @@
 #include <ostream>
 //#include <functional>
 #include <cctype>       // isspace
+#include <map>
 
 namespace mos
 {
@@ -27,13 +28,10 @@ public:
 
     void displaySet(std::ostream& os, const char* delimiter="\t");
 
-    DataSet merge(const DataSet& first, const DataSet& second,
-                  const std::string& columnName);
-    DataSet unionSet(const DataSet& first, const DataSet& second,
-                     const std::string& columnName);
-    DataSet differenceSet(const DataSet& first, const DataSet& second,
-                          const std::string& columnName);
-    DataSet intersectionSet(const DataSet& first, const DataSet& second,
+    DataSet merge(const DataSet& other, const std::string& columnName);
+    DataSet unionSet(const DataSet& other, const std::string& columnName);
+    DataSet differenceSet(const DataSet& other, const std::string& columnName);
+    DataSet intersectionSet(const DataSet& other,
                             const std::string& columnName);
 
 private:
@@ -50,6 +48,7 @@ private:
     void addRow(const std::string& lineIn, const char* delimiter);
     void addColumn(const unsigned int columnType);
     void processHeader();
+    void match(DataSet& other);
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
                          unsigned int index);
@@ -73,6 +72,7 @@ private:
     std::vector<itemVectorPtr> dataSet;
 
     int rowCount;
+    std::map<unsigned int, unsigned int> mapBuffer;
 };
 
 // non-member, non-friend functions

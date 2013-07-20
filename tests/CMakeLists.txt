@@ -11,6 +11,7 @@ include_directories(
 add_executable(${test_EXECUTABLE} string_clean_test.cpp
                       data_set_test.cpp
                       item_test.cpp
+                      compare_test.cpp
                       ${PROJECT_SOURCE_DIR}/data_set.cpp
                       ${PROJECT_SOURCE_DIR}/item.cpp
                       ${PROJECT_SOURCE_DIR}/string_clean.cpp
