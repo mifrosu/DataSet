@@ -21,6 +21,9 @@ public:
     virtual int getIntDatum(unsigned int index);
     virtual std::string getStringDatum(unsigned int index);
     virtual double getDoubleDatum(unsigned int index);
+    virtual void push_back (std::string value) {}
+    virtual void push_back (int value) {}
+    virtual void push_back (double value) {}
     enum typeId {
         STRING = 0, INT = 1, DOUBLE = 2
     };

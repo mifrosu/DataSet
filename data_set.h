@@ -28,10 +28,17 @@ public:
     void displaySet(std::ostream& os, const char* delimiter="\t");
 
 private:
+    /**
+     * @brief itemVectorPtr
+     * Each derived Item object will hold a datum, corresponding
+     * to a table cell. ItemVectorPtr corresponds to a table column.
+     */
+    typedef std::shared_ptr<Item> itemVectorPtr;
 
     void addHeader(const std::string& headerLine);
     void setColumnType(const unsigned int columnType);
-    void addRow(const std::string& lineIn);
+    void addCell(const std::string& cellItem, itemVectorPtr column);
+    void addRow(const std::string& lineIn, const char* delimiter);
     void addColumn(const unsigned int columnType);
     void processHeader();
 
@@ -48,12 +55,7 @@ private:
      */
     std::vector<std::string> headerList;
 
-    /**
-     * @brief itemVectorPtr
-     * Each derived Item object will hold a datum, corresponding
-     * to a table cell. ItemVectorPtr corresponds to a table column.
-     */
-    typedef std::shared_ptr<Item> itemVectorPtr;
+
 
     /**
      * @brief dataSet
@@ -61,7 +63,7 @@ private:
      */
     std::vector<itemVectorPtr> dataSet;
 
-    unsigned int rowCount;
+    int rowCount;
 };
 
 // non-member, non-friend functions

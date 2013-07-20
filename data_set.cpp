@@ -21,8 +21,14 @@ DataSet::DataSet(const std::string& fileName, const char* delimiter) :
         getline(inFileStream, inHeader);
         split(inHeader, &headerList, delimiter);
         processHeader();
+        std::string line;
+        while (inFileStream.good())
+        {
+            getline(inFileStream, line);
+            addRow(line, delimiter);
+        }
     }
-
+    inFileStream.close();
 }
 
 std::vector<std::string> DataSet::getHeader() const
@@ -67,7 +73,7 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
             unsigned int columnDepth = dataSet[0]->size();
             for (unsigned int c = 0; c != columnDepth; ++c) {
                 for (unsigned int r = 0; r != rowLength; ++r) {
-                    os << dataSet[0]->getRepr(r) << delimiter;
+                    os << dataSet[r]->getRepr(c) << delimiter;
                 }
             }
         }
@@ -75,9 +81,76 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
     }
 }
 
-void DataSet::addRow(const std::string &lineIn)
+void DataSet::addCell(const std::string &cellItem, itemVectorPtr column)
 {
-    //unsigned int headerEnd = headerList.s
+    if (cellItem == " ") {
+        switch (column->type) {
+        case INT:
+            column->push_back(-1);
+            break;
+        case DOUBLE:
+            column->push_back(std::numeric_limits<double>::quiet_NaN());
+            break;
+        default: // STRING
+            column->push_back(" ");
+            break;
+        }
+    }
+    else {
+        switch (column->type) {
+        case INT:
+            try {
+                int value = boost::lexical_cast<int>(
+                            cellItem);
+                column->push_back(value);
+            }
+            catch (boost::bad_lexical_cast& e) {
+                std::cerr << "Problem cast: " << e.what() << std::endl;
+            }
+            break;
+        case DOUBLE:
+            try {
+                double value = boost::lexical_cast<double>(
+                            cellItem);
+                column->push_back(value);
+            }
+            catch (boost::bad_lexical_cast& e) {
+                std::cerr << "Problem cast: " << e.what() << std::endl;
+            }
+            break;
+        default: // STRING
+            column->push_back(cellItem);
+            break;
+        }
+    }
+}
+
+void DataSet::addRow(const std::string &lineIn, const char* delimiter)
+{
+    std::vector<std::string> lineVector;
+    split(lineIn, &lineVector, delimiter);
+    if (lineVector.size() > 0) {
+        unsigned int dataSetEnd = dataSet.size();
+        dataSet[0]->push_back(rowCount);
+        std::vector<std::string>::const_iterator iter = lineVector.begin();
+        std::vector<std::string>::const_iterator iterEnd = lineVector.end();
+        for (unsigned int i = 1; i != dataSetEnd; ++i)
+        {
+            if (iter < iterEnd) {
+                addCell(*iter, dataSet[i]);
+                ++iter;
+            }
+            else {
+                addCell(" ", dataSet[i]);
+            }
+
+        }
+        ++rowCount;
+
+    }
+    else {
+        return;
+    }
 
     // You are here!
     // need convert string -> int, double

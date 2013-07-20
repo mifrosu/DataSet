@@ -35,7 +35,7 @@ void split(const std::string& inString, std::vector<std::string>* store,
 
 void stripEnd(std::string* inString)
 {
-    if (inString->empty()) {
+    if (inString->empty() || *inString == " ") {
         return;
     }
 
@@ -57,7 +57,7 @@ void stripEnd(std::string* inString)
 
 void stripBegin(std::string* inString)
 {
-    if (inString->empty()) {
+    if (inString->empty() || *inString == " ") {
         return;
     }
 
