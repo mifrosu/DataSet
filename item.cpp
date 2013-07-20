@@ -192,6 +192,21 @@ std::vector<unsigned int> DoubleColumn::findValue(double value)
     return indexList;
 }
 
+std::vector<unsigned int> DoubleColumn::findValue(double value,
+                                            bool (*compare)(double,double))
+{
+    std::vector<unsigned int> indexList;
+    std::vector<double>::iterator iter = data.begin();
+    std::vector<double>::iterator iterEnd = data.end();
+
+    while(iter != iterEnd) {
+        if (compare(*iter, value)) {
+            indexList.push_back(std::distance(data.begin(),iter));
+        }
+        ++iter;
+    }
+}
+
 void DoubleColumn::getData(std::vector<double> &store)
 {
     store = data;
