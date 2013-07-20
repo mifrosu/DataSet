@@ -14,6 +14,12 @@ public:
 
     virtual void SetUp()
     {
+        testFile = "test_file.txt";
+        testHead = "ID=1, Molecule, Solubility=2, Molecular Weight=2";
+        line1 = "1, Paracetamol, 4.97, 151";
+        line2 = "2, Caffeine, 5.05, 194";
+        line3 = "3, Indomethacin, 0.4, 358";
+        line4 = "4,Trimethoprim, 3.14, 290";
 
     }
 
@@ -21,6 +27,13 @@ public:
     {
 
     }
+
+    std::string testFile;
+    std::string testHead;
+    std::string line1;
+    std::string line2;
+    std::string line3;
+    std::string line4;
 };
 
 
@@ -39,14 +52,14 @@ TEST_F(DataSetTest, InitializeHeader)
 {
 //     C++11 version
 //     std::vector<std::string> testList = {"ID=1, ... }
-    std::string testFile = "test_file.txt";
-    std::string testHead = "ID=1, Molecule, Solubility=2, Molecular Weight=2";
+    // std::string testFile = "test_file.txt";
+    std::string testHead0 = "ID=1, Molecule, Solubility=2, Molecular Weight=2";
 
     std::ofstream testFileStream(testFile.c_str());
     if (!testFileStream) {
         FAIL();
     }
-    testFileStream << testHead << std::endl;
+    testFileStream << testHead0 << std::endl;
     testFileStream.close();
 
     DataSet testDataSet = DataSet(testFile,",");
@@ -78,16 +91,10 @@ TEST_F(DataSetTest, InitializeHeader)
 
 }
 
-TEST_F(DataSetTest, InitializeDataSet)
+TEST_F(DataSetTest, InitializeDataSetEmpty)
 {
 //     C++11 version
 //     std::vector<std::string> testList = {"ID=1, ... }
-    std::string testFile = "test_file.txt";
-    std::string testHead = "ID=1, Molecule, Solubility=2, Molecular Weight=2";
-    std::string line1 = "1, Paracetamol, 4.97, 151";
-    std::string line2 = "2, Caffeine, 5.05, 194";
-    std::string line3 = "3, Indomethacin, 0.4, 358";
-    std::string line4 = "4,Trimethoprim, 3.14, 290";
 
     std::ofstream testFileStream(testFile.c_str());
     if (!testFileStream) {

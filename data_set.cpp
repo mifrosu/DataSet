@@ -44,9 +44,7 @@ std::vector<std::string> DataSet::getRow(const unsigned int index) const
             else {
                 thisRow.push_back(" ");
             }
-
         }
-        // Here
     }
     return thisRow;
 
