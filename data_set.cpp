@@ -244,7 +244,7 @@ unsigned int DataSet::findHeader(const std::string &header)
     std::vector<std::string>::iterator iterEnd = headerList.end();
 
     iter = std::find(iter, iterEnd, header);
-    if (iter == headerList.end()) {
+    if (iter == iterEnd) {
         // not found
         return -1;
     }

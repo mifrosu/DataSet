@@ -68,3 +68,45 @@ TEST_F(ItemTest, DoubleColumnSizeTest)
     testColumn.push_back(8.31451);
     ASSERT_EQ(3, testColumn.size());
 }
+
+TEST_F(ItemTest, FindStringIndexes)
+{
+    std::string testArray[] = {"to", "be", "or", "not", "to", "be"};
+    StringColumn testColumn;
+    for (int i=0; i != 6; ++i) {
+        testColumn.push_back(testArray[i]);
+    }
+    std::vector<unsigned int> indexList;
+    indexList = testColumn.findValue("to");
+    std::vector<unsigned int> expectedList = {0, 4};
+    ASSERT_EQ(2, indexList.size());
+    ASSERT_EQ(expectedList, indexList);
+}
+
+TEST_F(ItemTest, FindIntIndexes)
+{
+    int testArray[] = {2, 9, 2, 9, 9, 9};
+    IntColumn testColumn;
+    for (int i=0; i != 6; ++i) {
+        testColumn.push_back(testArray[i]);
+    }
+    std::vector<unsigned int> indexList;
+    indexList = testColumn.findValue(9);
+    std::vector<unsigned int> expectedList = {1, 3, 4, 5};
+    ASSERT_EQ(4, indexList.size());
+    ASSERT_EQ(expectedList, indexList);
+}
+
+TEST_F(ItemTest, FindDoubleIndexes)
+{
+    double testArray[] = {2.0, 9.0, 2.0, 9.0, 9.0, 9.0};
+    IntColumn testColumn;
+    for (int i=0; i != 6; ++i) {
+        testColumn.push_back(testArray[i]);
+    }
+    std::vector<unsigned int> indexList;
+    indexList = testColumn.findValue(9);
+    std::vector<unsigned int> expectedList = {1, 3, 4, 5};
+    ASSERT_EQ(4, indexList.size());
+    ASSERT_EQ(expectedList, indexList);
+}

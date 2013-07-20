@@ -2,6 +2,7 @@
 #include <iostream>
 #include <limits>
 #include <cmath>
+#include <algorithm>
 
 namespace mos {
 
@@ -22,6 +23,23 @@ double Item::getDoubleDatum(unsigned int index)
     return std::numeric_limits<double>::quiet_NaN();
 }
 
+std::vector<unsigned int> Item::findValue(const std::string& value)
+{
+    std::vector<unsigned int> indexList;
+    return indexList;
+}
+
+std::vector<unsigned int> Item::findValue(int value)
+{
+    std::vector<unsigned int> indexList;
+    return indexList;
+}
+
+std::vector<unsigned int> Item::findValue(double value)
+{
+    std::vector<unsigned int> indexList;
+    return indexList;
+}
 
 
 // --- StringColumn
@@ -46,6 +64,27 @@ void StringColumn::push_back(std::string value) {
 
 unsigned int StringColumn::size() {
     return data.size();
+}
+
+std::vector<unsigned int> StringColumn::findValue(const std::string& value)
+{
+    std::vector<unsigned int> indexList;
+    std::vector<std::string>::iterator iter = data.begin();
+    std::vector<std::string>::iterator iterEnd = data.end();
+
+    while(iter != iterEnd) {
+        iter = std::find(iter, iterEnd, value);
+        if (iter != iterEnd) {
+            indexList.push_back(std::distance(data.begin(),iter));
+            ++iter;
+        }
+    }
+    return indexList;
+}
+
+void StringColumn::getData(std::vector<std::string> &store)
+{
+    store = data;
 }
 
 
@@ -73,6 +112,27 @@ unsigned int IntColumn::size() {
     return data.size();
 }
 
+std::vector<unsigned int> IntColumn::findValue(int value)
+{
+    std::vector<unsigned int> indexList;
+    std::vector<int>::iterator iter = data.begin();
+    std::vector<int>::iterator iterEnd = data.end();
+
+    while(iter != iterEnd) {
+        iter = std::find(iter, iterEnd, value);
+        if (iter != iterEnd) {
+            indexList.push_back(std::distance(data.begin(),iter));
+            ++iter;
+        }
+    }
+    return indexList;
+}
+
+void IntColumn::getData(std::vector<int> &store)
+{
+    store = data;
+}
+
 // --- DoubleColumn
 
 std::string DoubleColumn::getRepr(unsigned int index) {
@@ -98,6 +158,26 @@ unsigned int DoubleColumn::size() {
     return data.size();
 }
 
+std::vector<unsigned int> DoubleColumn::findValue(double value)
+{
+    std::vector<unsigned int> indexList;
+    std::vector<double>::iterator iter = data.begin();
+    std::vector<double>::iterator iterEnd = data.end();
+
+    while(iter != iterEnd) {
+        iter = std::find_if(iter, iterEnd, double_compare(value, epsilon));
+        if (iter != iterEnd) {
+            indexList.push_back(std::distance(data.begin(),iter));
+            ++iter;
+        }
+    }
+    return indexList;
+}
+
+void DoubleColumn::getData(std::vector<double> &store)
+{
+    store = data;
+}
 
 
 

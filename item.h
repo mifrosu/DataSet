@@ -24,6 +24,13 @@ public:
     virtual void push_back (std::string value) {}
     virtual void push_back (int value) {}
     virtual void push_back (double value) {}
+    virtual std::vector<unsigned int> findValue(const std::string& value);
+    virtual std::vector<unsigned int> findValue(int value);
+    virtual std::vector<unsigned int> findValue(double value);
+    virtual void getData(std::vector<std::string>& store) {}
+    virtual void getData(std::vector<int>& store) {}
+    virtual void getData(std::vector<double>& store) {}
+
     enum typeId {
         STRING = 0, INT = 1, DOUBLE = 2
     };
@@ -37,7 +44,8 @@ public:
     void push_back(std::string value);
     unsigned int size();
     std::string getRepr(unsigned int index);
-
+    std::vector<unsigned int> findValue(const std::string &value);
+    void getData(std::vector<std::string> &store);
 private:
     std::vector<std::string> data;
 
@@ -50,7 +58,8 @@ public:
     void push_back(int value);
     unsigned int size();
     std::string getRepr(unsigned int index);
-
+    std::vector<unsigned int> findValue(int value);
+    void getData(std::vector<int> &store);
 private:
     std::vector<int> data;
 
@@ -63,9 +72,24 @@ public:
     void push_back(double value);
     unsigned int size();
     std::string getRepr(unsigned int index);
+    std::vector<unsigned int> findValue(double value);
+    void getData(std::vector<double> &store);
 private:
     std::vector<double> data;
+    const double epsilon = 1E-8;
+    struct double_compare
+    {
+        double_compare(double value, double delta) : val(value), delta(delta)
+        { }
+        inline bool operator()(const double &x) const {
+            return abs(x-val) < delta;
+        }
+    private:
+        double val, delta;
+    };
 };
+
+
 
 
 //template <typename T>
