@@ -16,6 +16,13 @@ public:
     unsigned int type;
     virtual unsigned int size() = 0;
     virtual std::string getRepr(unsigned int index) = 0;
+    //virtual std::string getDatum(unsigned int index,
+    //                             const std::vector<std::string>& inData) = 0;
+    virtual int getIntDatum(unsigned int index);
+    //virtual double getDoubleDatum(unsigned int index) = 0;
+    enum typeId {
+        STRING = 0, INT = 1, DOUBLE = 2
+    };
 };
 
 template <typename T>
@@ -28,16 +35,28 @@ public:
     unsigned int size();
     std::string getRepr(unsigned int index);
 
+private:
+    enum typeId {
+        STRING = 0, INT = 1, DOUBLE = 2
+    };
+    std::string stringBuffer;
+    int intBuffer;
+    double doubleBuffer;
 };
 
 template <typename T>
 T Column<T>::getDatum(unsigned int index)
 {
     assert(index < data.size());
-    if (index < data.size()) {
-        return data[index];
-    }
+    return data[index];
 }
+
+//template <typename T>
+//int Column<T>::getIntDatum(unsigned int index)
+//{
+//    // for other than Column<int>
+//    return -1;
+//}
 
 template <typename T>
 std::string Column<T>::getRepr(unsigned int index)
@@ -60,6 +79,9 @@ unsigned int Column<T>::size()
     return data.size();
 }
 
+//template<>
+//class Column<int> : public Item
+
 typedef Column<std::string> StringColumn;
 typedef Column<int> IntColumn;
 typedef Column<double> DoubleColumn;
@@ -78,25 +100,22 @@ typedef Column<double> DoubleColumn;
 //    Item();
 //};
 
-//class StringItem : public Item
+//class StringColumn : public Item
 //{
 //public:
-//    StringItem();
 //    std::vector<std::string> column;
 
 //};
 
-//class IntItem : public Item
+//class IntColumn : public Item
 //{
 //public:
-//    IntItem();
 //    std::vector<int> column;
 //};
 
-//class DoubleItem : public Item
+//class DoubleColumn : public Item
 //{
 //public:
-//    DoubleItem();
 //    std::vector<double> column;
 //};
 

@@ -104,7 +104,14 @@ TEST_F(DataSetTest, InitializeDataSet)
 
     std::vector<std::string> testOutHeader = testDataSet.getHeader();
     testDataSet.displaySet(std::cout,",");
-    std::vector<std::string> row1 = testDataSet.getRow();
+    std::vector<std::string> row1 = testDataSet.getRow(0);
+    std::vector<std::string> emptyRow;
+    std::vector<std::string>::const_iterator k;
+    for (k = testOutHeader.begin(); k != testOutHeader.end(); ++k) {
+        emptyRow.push_back(" ");
+    }
+    ASSERT_EQ(5, emptyRow.size());
+    ASSERT_EQ(emptyRow, row1);
 
     int returnCode = std::remove(testFile.c_str());
     if (returnCode != 0) {

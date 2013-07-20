@@ -8,7 +8,8 @@
 
 namespace mos {
 
-DataSet::DataSet(const std::string& fileName, const char* delimiter)
+DataSet::DataSet(const std::string& fileName, const char* delimiter) :
+    rowCount(0)
 {
     std::ifstream inFileStream(fileName.c_str());
     if (!inFileStream) {
@@ -29,19 +30,25 @@ std::vector<std::string> DataSet::getHeader() const
     return headerList;
 }
 
-std::vector<std::string> DataSet::getRow() const
+std::vector<std::string> DataSet::getRow(const unsigned int index) const
 {
     std::vector<std::string> thisRow;
+    if (index < dataSet[0]->size()) {
+        unsigned int end = headerList.size();
+        for (unsigned int  i = 0; i != end; ++i)
+        {
+            if (index < dataSet[i]->size())
+            {
+                thisRow.push_back(dataSet[i]->getRepr(index));
+            }
+            else {
+                thisRow.push_back(" ");
+            }
+
+        }
+        // Here
+    }
     return thisRow;
-
-}
-
-void DataSet::addRow(const std::string &lineIn)
-{
-    // You are here!
-    // need convert string -> int, double
-    // what to place if data is missing or wrong?
-    // NaN for numbers, blank for strings?
 
 }
 
@@ -70,20 +77,53 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
     }
 }
 
-void DataSet::addColumn(const unsigned int type)
+void DataSet::addRow(const std::string &lineIn)
 {
-    switch (type) {
+    //unsigned int headerEnd = headerList.s
+
+    // You are here!
+    // need convert string -> int, double
+    // what to place if data is missing or wrong?
+    // NaN for numbers, blank for strings?
+
+}
+
+void DataSet::setColumnType(const unsigned int columnType)
+{
+    unsigned int currentIndex = dataSet.size()-1;
+    switch (columnType) {
+    case STRING:
+        dataSet[currentIndex]->type = STRING;
+        break;
     case INT:
-        dataSet.push_back(std::make_shared<IntColumn>());
+        dataSet[currentIndex]->type = INT;
         break;
     case DOUBLE:
-        dataSet.push_back(std::make_shared<DoubleColumn>());
-        break;
-    default:
-        dataSet.push_back(std::make_shared<StringColumn>());
+        dataSet[currentIndex]->type = DOUBLE;
         break;
     }
 }
+
+
+void DataSet::addColumn(const unsigned int columnType)
+{
+    switch (columnType) {
+    case INT:
+        dataSet.push_back(std::make_shared<IntColumn>());
+        setColumnType(INT);
+        break;
+    case DOUBLE:
+        dataSet.push_back(std::make_shared<DoubleColumn>());
+        setColumnType(DOUBLE);
+        break;
+    default:
+        dataSet.push_back(std::make_shared<StringColumn>());
+        setColumnType(STRING);
+        break;
+    }
+}
+
+
 
 void DataSet::processHeader()
 {
@@ -102,16 +142,14 @@ void DataSet::processHeader()
                 catch (boost::bad_lexical_cast& e) {
                     std::cerr << "Problem cast: " << e.what() << std::endl;
                 }
-
                 if (typeId <= 2) {
+                    // typeId will be 0 (STRING) if lexical_cast fails
                     addColumn(typeId);
                 }
             }
             else {
                 addColumn(STRING);
             }
-            std::cout << (*iter)[k-2];
-            std::cout << std::endl;
         }
     }
 }

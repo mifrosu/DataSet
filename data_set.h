@@ -23,20 +23,21 @@ public:
     void addFile(const std::string& fileName, const char* delimiter="\t");
 
     std::vector<std::string> getHeader() const;
-    std::vector<std::string> getRow() const;
+    std::vector<std::string> getRow(const unsigned int index) const;
 
     void displaySet(std::ostream& os, const char* delimiter="\t");
 
 private:
 
     void addHeader(const std::string& headerLine);
+    void setColumnType(const unsigned int columnType);
     void addRow(const std::string& lineIn);
-    void addColumn(const unsigned int type);
+    void addColumn(const unsigned int columnType);
     void processHeader();
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
                          unsigned int index);
-    enum columnTypeEnums
+    enum columnType
     {
         STRING = 0, INT = 1, DOUBLE = 2
     };
@@ -59,6 +60,8 @@ private:
      * dataSet represents the table data.
      */
     std::vector<itemVectorPtr> dataSet;
+
+    unsigned int rowCount;
 };
 
 // non-member, non-friend functions

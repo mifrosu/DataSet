@@ -59,3 +59,21 @@ TEST_F(StringCleanTest, StripWhiteSpace)
     strip(&testString);
     ASSERT_EQ("test test", testString);
 }
+
+TEST_F(StringCleanTest, UnsignedIntConvertToStringTest)
+{
+    unsigned int a = 42;
+    ASSERT_EQ("42", convertToString(a));
+}
+
+TEST_F(StringCleanTest, IntConvertToStringTest)
+{
+    int equal_C_F = -40;
+    ASSERT_EQ("-40", convertToString(equal_C_F));
+}
+
+TEST_F(StringCleanTest, DoubleConvertToStringTest)
+{
+    double abs0 = -273.15;
+    ASSERT_EQ("-273.15", convertToString(abs0));
+}

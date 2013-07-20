@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 
 namespace mos {
@@ -17,10 +18,11 @@ void stripEnd(std::string* inString);
 void stripBegin(std::string* inString);
 
 template <typename T>
-std::string convertToString(T)
+std::string convertToString(T inValue)
 {
-    std::string outValue;
-    return outValue;
+    std::stringstream ss;
+    ss << inValue;
+    return ss.str();
 
 }
 
