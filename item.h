@@ -19,69 +19,79 @@ public:
     //virtual std::string getDatum(unsigned int index,
     //                             const std::vector<std::string>& inData) = 0;
     virtual int getIntDatum(unsigned int index);
-    //virtual double getDoubleDatum(unsigned int index) = 0;
+    virtual std::string getStringDatum(unsigned int index);
+    virtual double getDoubleDatum(unsigned int index);
     enum typeId {
         STRING = 0, INT = 1, DOUBLE = 2
     };
 };
 
-template <typename T>
-class Column : public Item
+class StringColumn : public Item
 {
 public:
-    std::vector<T> data;
-    T getDatum(unsigned int index);
-    void push_back(T value);
+
+    std::string getStringDatum(unsigned int index);
+    void push_back(std::string value);
     unsigned int size();
     std::string getRepr(unsigned int index);
 
 private:
-    enum typeId {
-        STRING = 0, INT = 1, DOUBLE = 2
-    };
-    std::string stringBuffer;
-    int intBuffer;
-    double doubleBuffer;
+    std::vector<std::string> data;
+
+};
+
+class IntColumn : public Item
+{
+public:
+    int getIntDatum(unsigned int index);
+    void push_back(int value);
+    unsigned int size();
+    std::string getRepr(unsigned int index);
+
+private:
+    std::vector<int> data;
+
+};
+
+class DoubleColumn : public Item
+{
+public:
+    double getDoubleDatum(unsigned int index);
+    void push_back(double value);
+    unsigned int size();
+    std::string getRepr(unsigned int index);
+private:
+    std::vector<double> data;
 };
 
 
-
-typedef Column<std::string> StringColumn;
-typedef Column<int> IntColumn;
-typedef Column<double> DoubleColumn;
-
-
-//class Item
+//template <typename T>
+//class Column : public Item
 //{
 //public:
-
-//    virtual ~Item();
-//    int type;
-//    int currentIndex;
-//    int futureIndex;
+//    std::vector<T> data;
+//    T getDatum(unsigned int index);
+//    void push_back(T value);
+//    unsigned int size();
+//    std::string getRepr(unsigned int index);
 
 //private:
-//    Item();
+//    enum typeId {
+//        STRING = 0, INT = 1, DOUBLE = 2
+//    };
+//    std::string stringBuffer;
+//    int intBuffer;
+//    double doubleBuffer;
 //};
 
-//class StringColumn : public Item
-//{
-//public:
-//    std::vector<std::string> column;
 
-//};
 
-//class IntColumn : public Item
-//{
-//public:
-//    std::vector<int> column;
-//};
+//typedef Column<std::string> StringColumn;
+//typedef Column<int> IntColumn;
+//typedef Column<double> DoubleColumn;
 
-//class DoubleColumn : public Item
-//{
-//public:
-//    std::vector<double> column;
-//};
+
+
 
 }   // namespace
 

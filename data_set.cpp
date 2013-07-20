@@ -33,7 +33,7 @@ std::vector<std::string> DataSet::getHeader() const
 std::vector<std::string> DataSet::getRow(const unsigned int index) const
 {
     std::vector<std::string> thisRow;
-    if (index < dataSet[0]->size()) {
+    if (index < dataSet[0]->size() || index == 0) {
         unsigned int end = headerList.size();
         for (unsigned int  i = 0; i != end; ++i)
         {

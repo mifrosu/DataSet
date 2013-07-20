@@ -28,21 +28,21 @@ TEST_F(ItemTest, StringColumnPushGetTest)
 {
     StringColumn testColumn;
     testColumn.push_back("Hello");
-    ASSERT_EQ("Hello", testColumn.getDatum(0));
+    ASSERT_EQ("Hello", testColumn.getStringDatum(0));
 }
 
 TEST_F(ItemTest, IntColumnPushGetTest)
 {
     IntColumn testColumn;
     testColumn.push_back(42);
-    ASSERT_EQ(42, testColumn.getDatum(0));
+    ASSERT_EQ(42, testColumn.getIntDatum(0));
 }
 
 TEST_F(ItemTest, DoubleColumnPushGetTest)
 {
     DoubleColumn testColumn;
     testColumn.push_back(2.71828);
-    ASSERT_DOUBLE_EQ(2.71828, testColumn.getDatum(0));
+    ASSERT_DOUBLE_EQ(2.71828, testColumn.getDoubleDatum(0));
 }
 
 TEST_F(ItemTest, StringColumnSizeTest)
