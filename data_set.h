@@ -22,6 +22,7 @@ public:
     DataSet(const std::string& fileName, const char* delimiter="\t");
 
     void addFile(const std::string& fileName, const char* delimiter="\t");
+    void clearSet();
 
     std::vector<std::string> getHeader() const;
     std::vector<std::string> getRow(const unsigned int index) const;

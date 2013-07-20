@@ -8,8 +8,12 @@
 
 namespace mos {
 
-DataSet::DataSet(const std::string& fileName, const char* delimiter) :
-    rowCount(0)
+DataSet::DataSet() : rowCount(0)
+{
+
+}
+
+void DataSet::addFile(const std::string &fileName, const char *delimiter)
 {
     std::ifstream inFileStream(fileName.c_str());
     if (!inFileStream) {
@@ -29,6 +33,19 @@ DataSet::DataSet(const std::string& fileName, const char* delimiter) :
         }
     }
     inFileStream.close();
+}
+
+DataSet::DataSet(const std::string& fileName, const char* delimiter)
+{
+    clearSet();
+    addFile(fileName, delimiter);
+}
+
+void DataSet::clearSet()
+{
+    rowCount = 0;
+    headerList.clear();
+    dataSet.clear();
 }
 
 std::vector<std::string> DataSet::getHeader() const
@@ -75,6 +92,7 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
                 for (unsigned int r = 0; r != rowLength; ++r) {
                     os << dataSet[r]->getRepr(c) << delimiter;
                 }
+                os << std::endl;
             }
         }
         os << std::endl;
