@@ -52,8 +52,6 @@ unsigned int StringColumn::size() {
 // --- IntColumn
 
 std::string IntColumn::getRepr(unsigned int index) {
-    std::cout << "size:" << data.size() << std::endl;
-    std::cout << "--- " << index << " ---" << std::endl;
     assert(index < data.size());
     std::stringstream ss;
     ss << data[index];

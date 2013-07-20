@@ -151,12 +151,6 @@ void DataSet::addRow(const std::string &lineIn, const char* delimiter)
     else {
         return;
     }
-
-    // You are here!
-    // need convert string -> int, double
-    // what to place if data is missing or wrong?
-    // NaN for numbers, blank for strings?
-
 }
 
 void DataSet::setColumnType(const unsigned int columnType)

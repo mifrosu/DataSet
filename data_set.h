@@ -2,7 +2,7 @@
 #define DATA_SET_H
 
 #include "item.h"
-#include <memory>
+#include <memory>       // std::shared_ptr
 #include <string>
 #include <vector>
 #include <ostream>
@@ -26,6 +26,15 @@ public:
     std::vector<std::string> getRow(const unsigned int index) const;
 
     void displaySet(std::ostream& os, const char* delimiter="\t");
+
+    DataSet merge(const DataSet& first, const DataSet& second,
+                  const std::string& columnName);
+    DataSet unionSet(const DataSet& first, const DataSet& second,
+                     const std::string& columnName);
+    DataSet differenceSet(const DataSet& first, const DataSet& second,
+                          const std::string& columnName);
+    DataSet intersectionSet(const DataSet& first, const DataSet& second,
+                            const std::string& columnName);
 
 private:
     /**
@@ -67,6 +76,9 @@ private:
 };
 
 // non-member, non-friend functions
+
+
+
 
 
 
