@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <cassert>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
 
 namespace mos {
@@ -235,6 +236,28 @@ void DataSet::processHeader()
             }
         }
     }
+}
+
+unsigned int DataSet::findHeader(const std::string &header)
+{
+    std::vector<std::string>::iterator iter = headerList.begin();
+    std::vector<std::string>::iterator iterEnd = headerList.end();
+
+    iter = std::find(iter, iterEnd, header);
+    if (iter == headerList.end()) {
+        // not found
+        return -1;
+    }
+    else {
+        return std::distance(headerList.begin(),iter);
+    }
+
+
+}
+
+void DataSet::match(DataSet &other)
+{
+
 }
 
 

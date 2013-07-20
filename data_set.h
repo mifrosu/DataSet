@@ -49,7 +49,9 @@ private:
     void addRow(const std::string& lineIn, const char* delimiter);
     void addColumn(const unsigned int columnType);
     void processHeader();
+
     void match(DataSet& other);
+    unsigned int findHeader(const std::string& header);
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
                          unsigned int index);
