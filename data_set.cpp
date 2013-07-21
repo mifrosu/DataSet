@@ -292,6 +292,28 @@ unsigned int DataSet::findHeader(const std::string &header)
 
 //}
 
+std::vector<unsigned int> DataSet::getOtherHeaderIndices(
+        const DataSet& other) {
+
+    std::vector<unsigned int> indexList;
+    unsigned int otherEnd = other.headerList.size();
+    if (otherEnd == 0) {
+        return indexList;
+    }
+    std::vector<std::string>::const_iterator iter;
+    std::vector<std::string>::const_iterator endIter = headerList.end();
+
+    for (unsigned int i = 0; i != otherEnd; ++i) {
+        iter = headerList.begin();
+        std::find(iter, endIter,other.headerList[i]);
+        if (iter == endIter) {
+            // not found
+            indexList.push_back(i);
+        }
+    }
+    return indexList;
+}
+
 std::vector<unsigned int> DataSet::generateRowPlan(const DataSet &other)
 {
     unsigned int columnDepth = other.dataSet[0]->size();
@@ -398,6 +420,7 @@ std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
     mapBuffer[unsigned(-1)] = rowPlan;
     return mapBuffer;
 }
+
 
 
 
