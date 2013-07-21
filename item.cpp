@@ -53,7 +53,19 @@ std::string StringColumn::getRepr(unsigned int index) {
 }
 
 std::vector<char> StringColumn::getUniquePlan() {
+    // TODO: refactor with IntColumn for common function
     std::vector<char> plan;
+    unsigned int end = data.size();
+    for (unsigned int i = 0; i != end; ++i)
+    {
+        int myCount = std::count(data.begin()+i,data.end(),data[i]);
+        if (myCount > 1) {
+            plan.push_back('n');
+        }
+        else {
+            plan.push_back('y');
+        }
+    }
     return plan;
 }
 
@@ -104,7 +116,19 @@ std::string IntColumn::getRepr(unsigned int index) {
 }
 
 std::vector<char> IntColumn::getUniquePlan() {
+    // TODO: refactor with IntColumn for common function
     std::vector<char> plan;
+    unsigned int end = data.size();
+    for (unsigned int i = 0; i != end; ++i)
+    {
+        int myCount = std::count(data.begin()+i,data.end(),data[i]);
+        if (myCount > 1) {
+            plan.push_back('n');
+        }
+        else {
+            plan.push_back('y');
+        }
+    }
     return plan;
 }
 
@@ -153,8 +177,46 @@ std::string DoubleColumn::getRepr(unsigned int index) {
     return ss.str();
 }
 
+bool isDoubleUnique(const std::vector<double> &inData,
+                    unsigned int index)
+{
+    // optimizations could be to sort a copy of the vector first,
+    // and binary search for duplicates
+
+    if (inData.size() == 1 ||
+            inData.begin() + index == (inData.end()-1)) {
+        return true;
+    }
+    assert((inData.begin()+index) < inData.end());
+    std::vector<double>::const_iterator endIter = inData.end();
+    std::vector<double>::const_iterator iter = inData.begin() + index;
+    std::vector<double>::const_iterator cursor = iter + 1;
+
+    while (cursor != endIter) {
+        if (compareDouble(*iter,*cursor)) {
+            // a match, not unique
+            return false;
+        }
+        else {
+            ++cursor;
+        }
+    }
+    return true;
+}
+
 std::vector<char> DoubleColumn::getUniquePlan() {
     std::vector<char> plan;
+    unsigned int end = data.size();
+    for (unsigned int i = 0; i != end; ++i)
+    {
+        bool myCount = isDoubleUnique(data, i);
+        if (myCount) {
+            plan.push_back('y');
+        }
+        else {
+            plan.push_back('n');
+        }
+    }
     return plan;
 }
 
@@ -174,7 +236,7 @@ unsigned int DoubleColumn::size() {
     return data.size();
 }
 
-bool DoubleColumn::compareDouble(double a, double b)
+bool compareDouble(double a, double b, double epsilon)
 {
     if (a == b) {
         return true;

@@ -79,16 +79,20 @@ public:
     std::vector<unsigned int> findValue(double value);
     void getData(std::vector<double> &store);
 private:
-    bool compareDouble (double a, double b);
+
     std::vector<unsigned int> findValue(double value,
                                  bool (*compare)(double, double));
     std::vector<double> data;
-    const double epsilon = 1E-6;
     private:
         double val, delta;
 
 };
 
+// non-member functions
+
+bool isDoubleUnique(const std::vector<double>& inData,
+                    unsigned int index=0);
+bool compareDouble (double a, double b, double epsilon=1.0e-6);
 
 
 
