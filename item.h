@@ -18,6 +18,7 @@ public:
     virtual std::string getRepr(unsigned int index) = 0;
     //virtual std::string getDatum(unsigned int index,
     //                             const std::vector<std::string>& inData) = 0;
+    virtual std::vector<char> getUniquePlan() = 0;
     virtual int getIntDatum(unsigned int index);
     virtual std::string getStringDatum(unsigned int index);
     virtual double getDoubleDatum(unsigned int index);
@@ -44,6 +45,7 @@ public:
     void push_back(std::string value);
     unsigned int size();
     std::string getRepr(unsigned int index);
+    std::vector<char> getUniquePlan();
     std::vector<unsigned int> findValue(const std::string &value);
     void getData(std::vector<std::string> &store);
 private:
@@ -58,6 +60,7 @@ public:
     void push_back(int value);
     unsigned int size();
     std::string getRepr(unsigned int index);
+    std::vector<char> getUniquePlan();
     std::vector<unsigned int> findValue(int value);
     void getData(std::vector<int> &store);
 private:
@@ -72,6 +75,7 @@ public:
     void push_back(double value);
     unsigned int size();
     std::string getRepr(unsigned int index);
+    std::vector<char> getUniquePlan();
     std::vector<unsigned int> findValue(double value);
     void getData(std::vector<double> &store);
 private:

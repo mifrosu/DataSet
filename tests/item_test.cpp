@@ -110,3 +110,44 @@ TEST_F(ItemTest, FindDoubleIndexes)
     ASSERT_EQ(3, indexList.size());
     ASSERT_EQ(expectedList, indexList);
 }
+
+TEST_F(ItemTest, UniqueStringPlanTest)
+{
+    std::string testArray[] = {"to", "be", "or", "not", "to", "be"};
+    StringColumn testColumn;
+    for (int i=0; i != 6; ++i) {
+        testColumn.push_back(testArray[i]);
+    }
+    std::vector<char> testPlan = testColumn.getUniquePlan();
+    std::vector<char> expectPlan = {'n', 'n', 'y', 'y', 'y', 'y'};
+    ASSERT_EQ(6, testPlan.size());
+    ASSERT_EQ(expectPlan, testPlan);
+}
+
+TEST_F(ItemTest, UniqueIntPlanTest)
+{
+    int testArray[] = {2, 9, 2, 9, 9, 9};
+    IntColumn testColumn;
+    for (int i=0; i != 6; ++i) {
+        testColumn.push_back(testArray[i]);
+    }
+    std::vector<char> testPlan = testColumn.getUniquePlan();
+    std::vector<char> expectPlan = {'n', 'n', 'y', 'n', 'n', 'y'};
+    ASSERT_EQ(6, testPlan.size());
+    ASSERT_EQ(expectPlan, testPlan);
+}
+
+TEST_F(ItemTest, UniqueDoublePlanTest)
+{
+    double testArray[] = {2.0, 9.0001, 2.0, 9.0002, 9.0001, 9.0001};
+    DoubleColumn testColumn;
+    for (int i=0; i != 6; ++i) {
+        testColumn.push_back(testArray[i]);
+    }
+    std::vector<char> testPlan = testColumn.getUniquePlan();
+    std::vector<char> expectPlan = {'n', 'n', 'y', 'y', 'n', 'y'};
+    ASSERT_EQ(6, testPlan.size());
+    ASSERT_EQ(expectPlan, testPlan);
+}
+
+

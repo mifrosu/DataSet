@@ -35,6 +35,10 @@ public:
     DataSet intersectionSet(const DataSet& other,
                             const std::string& columnName);
 
+    // move to private post-test
+    void match(DataSet& other, const std::string& columnName,
+               bool onlyUnique=false);
+
 private:
     /**
      * @brief itemVectorPtr
@@ -50,7 +54,9 @@ private:
     void addColumn(const unsigned int columnType);
     void processHeader();
 
-    void match(DataSet& other, const std::string& columnName);
+    void findUnique(std::vector<char>* store, unsigned int rowIndex);
+
+
     unsigned int findHeader(const std::string& header);
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,

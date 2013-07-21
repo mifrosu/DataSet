@@ -52,6 +52,11 @@ std::string StringColumn::getRepr(unsigned int index) {
     return ss.str();
 }
 
+std::vector<char> StringColumn::getUniquePlan() {
+    std::vector<char> plan;
+    return plan;
+}
+
 std::string StringColumn::getStringDatum(unsigned int index) {
     if (index < data.size()) {
         return data[index];
@@ -98,6 +103,11 @@ std::string IntColumn::getRepr(unsigned int index) {
     return ss.str();
 }
 
+std::vector<char> IntColumn::getUniquePlan() {
+    std::vector<char> plan;
+    return plan;
+}
+
 int IntColumn::getIntDatum(unsigned int index) {
     if (index < data.size()) {
         return data[index];
@@ -141,6 +151,11 @@ std::string DoubleColumn::getRepr(unsigned int index) {
     std::stringstream ss;
     ss << data[index];
     return ss.str();
+}
+
+std::vector<char> DoubleColumn::getUniquePlan() {
+    std::vector<char> plan;
+    return plan;
 }
 
 double DoubleColumn::getDoubleDatum(unsigned int index) {
