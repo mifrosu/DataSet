@@ -282,8 +282,10 @@ void DataSet::match(DataSet &other, const std::string& columnName,
     mapBuffer.clear();
     unsigned int thisRowIndex = findHeader(columnName);
     unsigned int otherRowIndex = other.findHeader(columnName);
-
-
+    std::vector<char> uniquePlan;
+    if (onlyUnique) {
+        uniquePlan = dataSet[thisRowIndex]->getUniquePlan();
+    }
     if (thisRowIndex == unsigned(-1) ||
             otherRowIndex == unsigned(-1)) {
         std::cerr << "Error: " << columnName
@@ -299,6 +301,10 @@ void DataSet::match(DataSet &other, const std::string& columnName,
         //unsigned int otherColSize = other.dataSet[otherRowIndex]->size();
         for (unsigned int thisX = 0; thisX != thisColSize; ++thisX)
         {
+            if (onlyUnique == true && thisX < uniquePlan.size() &&
+                    uniquePlan[thisX] == 'n') {
+                continue;
+            }
             switch (dataSet[thisRowIndex]->type) {
 
             case INT: {  // note, we need brackets if variables are

@@ -92,7 +92,7 @@ private:
 
 bool isDoubleUnique(const std::vector<double>& inData,
                     unsigned int index=0);
-bool compareDouble (double a, double b, double epsilon=1.0e-6);
+bool compareDouble (double a, double b, double epsilon=1.0e-8);
 
 
 
