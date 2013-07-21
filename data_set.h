@@ -35,10 +35,6 @@ public:
     DataSet intersectionSet(const DataSet& other,
                             const std::string& columnName);
 
-    // move to private post-test
-    void match(DataSet& other, const std::string& columnName,
-               bool onlyUnique=false);
-
 private:
     /**
      * @brief itemVectorPtr
@@ -49,15 +45,29 @@ private:
 
     void addHeader(const std::string& headerLine);
     void setColumnType(const unsigned int columnType);
-    void addCell(const std::string& cellItem, itemVectorPtr column);
+    void addCell(int cellItem, itemVectorPtr column);
+    void addCell(double cellItem, itemVectorPtr column);
+    void addCell(const std::string& cellItem, itemVectorPtr);
     void addRow(const std::string& lineIn, const char* delimiter);
     void addColumn(const unsigned int columnType);
     void processHeader();
 
-    void findUnique(std::vector<char>* store, unsigned int rowIndex);
+    std::map<unsigned int, std::vector<unsigned int> > match(DataSet& other,
+                                              const std::string& columnName,
+                                              bool onlyUnique=false);
+
 
 
     unsigned int findHeader(const std::string& header);
+
+    /// Book-keeping functions:
+    /// get indices of columns not present herein
+    std::vector<unsigned int> getOtherColumnIndices(const DataSet& other);
+
+    /// 0 if row cell value in both sets, else 1
+    std::vector<unsigned int> generateRowPlan(const DataSet& other);
+    void setRowPlan(const std::vector<unsigned int>& indexList,
+                    std::vector<unsigned int>* rowPlan);
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
                          unsigned int index);
@@ -81,7 +91,6 @@ private:
     std::vector<itemVectorPtr> dataSet;
 
     int rowCount;
-    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
 };
 
 // non-member, non-friend functions

@@ -100,6 +100,22 @@ void DataSet::displaySet(std::ostream &os, const char* delimiter)
     }
 }
 
+void DataSet::addCell(int cellItem, itemVectorPtr column)
+{
+    if (column->type == INT) {
+        column->push_back(cellItem);
+    }
+    return;
+}
+
+void DataSet::addCell(double cellItem, itemVectorPtr column)
+{
+    if (column->type == DOUBLE) {
+        column->push_back(cellItem);
+    }
+    return;
+}
+
 void DataSet::addCell(const std::string &cellItem, itemVectorPtr column)
 {
     if (cellItem == " ") {
@@ -276,12 +292,49 @@ unsigned int DataSet::findHeader(const std::string &header)
 
 //}
 
-void DataSet::match(DataSet &other, const std::string& columnName,
-                    bool onlyUnique)
+std::vector<unsigned int> DataSet::generateRowPlan(const DataSet &other)
 {
-    mapBuffer.clear();
+    unsigned int columnDepth = other.dataSet[0]->size();
+    std::vector<unsigned int> rowPlan;
+    if (columnDepth == 0) {
+        return rowPlan;
+    }
+    else {
+        for (unsigned int i = 0; i != columnDepth; ++i) {
+            rowPlan.push_back(1);
+        }
+    }
+    return rowPlan;
+}
+
+void DataSet::setRowPlan(const std::vector<unsigned int> &indexList,
+                         std::vector<unsigned int>* rowPlan)
+{
+    if (rowPlan->size() != indexList.size()) {
+        return;
+    }
+    else {
+        std::vector<unsigned int>::const_iterator iter;
+        std::vector<unsigned int>::const_iterator endIter = indexList.end();
+
+        for (iter = indexList.begin(); iter != endIter; ++iter)
+        {
+            (*rowPlan)[*iter] = 0;
+        }
+    }
+    return;
+}
+
+std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
+        DataSet &other, const std::string& columnName, bool onlyUnique)
+{
+    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
     unsigned int thisRowIndex = findHeader(columnName);
     unsigned int otherRowIndex = other.findHeader(columnName);
+    // book keeping -- record for rows notmatched
+    std::vector<unsigned int> rowPlan = generateRowPlan(other);
+
+    // check for duplicates
     std::vector<char> uniquePlan;
     if (onlyUnique) {
         uniquePlan = dataSet[thisRowIndex]->getUniquePlan();
@@ -290,7 +343,7 @@ void DataSet::match(DataSet &other, const std::string& columnName,
             otherRowIndex == unsigned(-1)) {
         std::cerr << "Error: " << columnName
                   << " is not present in both sets." << std::endl;
-        return;
+        return mapBuffer;
     }
     else if (dataSet[thisRowIndex]->type !=
              other.dataSet[otherRowIndex]->type) {
@@ -315,6 +368,7 @@ void DataSet::match(DataSet &other, const std::string& columnName,
                         other.dataSet[otherRowIndex]->findValue(intValue);
                 // use thisUNIQUE_KEY column as map key
                 mapBuffer[dataSet[0]->getIntDatum(thisX)] = intIndexList;
+                setRowPlan(intIndexList, &rowPlan);
                 break;
             }
             case DOUBLE: {
@@ -324,6 +378,7 @@ void DataSet::match(DataSet &other, const std::string& columnName,
                         other.dataSet[otherRowIndex]->findValue(dblValue);
                 // use thisUNIQUE_KEY column as map key
                 mapBuffer[dataSet[0]->getIntDatum(thisX)] = dblIndexList;
+                setRowPlan(dblIndexList, &rowPlan);
                 break;
             }
             default: { //STRING
@@ -334,11 +389,14 @@ void DataSet::match(DataSet &other, const std::string& columnName,
                         other.dataSet[otherRowIndex]->findValue(stringValue);
                 // use thisUNIQUE_KEY column as map key
                 mapBuffer[dataSet[0]->getIntDatum(thisX)] = stringIndexList;
+                setRowPlan(stringIndexList, &rowPlan);
                 break;
             }
             }
         }
     }
+    mapBuffer[unsigned(-1)] = rowPlan;
+    return mapBuffer;
 }
 
 

@@ -69,7 +69,7 @@ TEST_F(ItemTest, DoubleColumnSizeTest)
     ASSERT_EQ(3, testColumn.size());
 }
 
-TEST_F(ItemTest, FindStringIndexes)
+TEST_F(ItemTest, FindStringIndices)
 {
     std::string testArray[] = {"to", "be", "or", "not", "to", "be"};
     StringColumn testColumn;
@@ -83,7 +83,7 @@ TEST_F(ItemTest, FindStringIndexes)
     ASSERT_EQ(expectedList, indexList);
 }
 
-TEST_F(ItemTest, FindIntIndexes)
+TEST_F(ItemTest, FindIntIndices)
 {
     int testArray[] = {2, 9, 2, 9, 9, 9};
     IntColumn testColumn;
@@ -97,7 +97,7 @@ TEST_F(ItemTest, FindIntIndexes)
     ASSERT_EQ(expectedList, indexList);
 }
 
-TEST_F(ItemTest, FindDoubleIndexes)
+TEST_F(ItemTest, FindDoubleIndices)
 {
     double testArray[] = {2.0, 9.0001, 2.0, 9.0002, 9.0001, 9.0001};
     DoubleColumn testColumn;
