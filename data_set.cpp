@@ -74,6 +74,11 @@ std::vector<std::string> DataSet::getRow(const unsigned int index) const
 
 }
 
+unsigned int DataSet::getSize()
+{
+    return dataSet[0]->size();
+}
+
 void DataSet::displaySet(std::ostream &os, const char* delimiter)
 {
     if (headerList.size() >= 1) {
@@ -188,6 +193,125 @@ void DataSet::addRow(const std::string &lineIn, const char* delimiter)
     }
 }
 
+void DataSet::getDatum(unsigned int index, itemVectorPtr column,
+                       DataBuffer &dataBuffer)
+{
+    if (column == 0) {
+        return;
+    }
+    switch (column->type) {
+    case INT:
+        dataBuffer.intBuffer = column->getIntDatum(index);
+        dataBuffer.setId = INT;
+        break;
+    case DOUBLE:
+        dataBuffer.doubleBuffer = column->getDoubleDatum(index);
+        dataBuffer.setId = DOUBLE;
+        break;
+    default:
+        dataBuffer.stringBuffer = column->getStringDatum(index);
+        dataBuffer.setId = STRING;
+        break;
+    }
+}
+
+void DataSet::addRowItem(itemVectorPtr outColumn,
+                         const DataBuffer& outBuffer)
+{
+    if (outColumn == 0) {
+        return;
+    }
+    switch (outColumn->type) {
+    case INT:
+        outColumn->push_back(outBuffer.intBuffer);
+        break;
+    case DOUBLE:
+        outColumn->push_back(outBuffer.doubleBuffer);
+        break;
+    default:
+        outColumn->push_back(outBuffer.stringBuffer);
+        break;
+    }
+
+}
+
+void DataSet::addOtherRow(unsigned int otherColumnIndex,
+                   const std::map<unsigned int, unsigned int>& commonIndexMap,
+                   const std::vector<unsigned>& otherHeaderIndexList,
+                   const DataSet& other, DataSet& outDataSet)
+{
+    unsigned int headerEnd = outDataSet.headerList.size();
+    std::map<unsigned int, unsigned int>::const_iterator endCommonMapIter;
+    endCommonMapIter = commonIndexMap.end();
+    std::map<unsigned int, unsigned int>::const_iterator commonMapIter;
+
+    outDataSet.dataSet[0]->push_back(outDataSet.rowCount);
+    for (unsigned int i = 1; i < headerEnd; ++i)
+    {
+
+        if (i < headerList.size()) {
+            commonMapIter = commonIndexMap.find(i);
+            if (commonMapIter != endCommonMapIter) {
+                // it is a common index
+                DataBuffer dataBuffer;
+                unsigned int otherIndex = commonMapIter->second;
+                getDatum(otherColumnIndex, other.dataSet[otherIndex],
+                         dataBuffer);
+                addRowItem(outDataSet.dataSet[i], dataBuffer);
+            }
+            else {
+                // header not in other
+                DataBuffer dataBuffer;
+                addRowItem(outDataSet.dataSet[i], dataBuffer); // add blank
+            }
+        }
+        else { // now using indices from other only
+            unsigned int otherEnd = otherHeaderIndexList.size();
+            for (unsigned int k = 0; k != otherEnd; ++k )
+            {
+                DataBuffer dataBuffer;
+                getDatum(otherColumnIndex,
+                         other.dataSet[otherHeaderIndexList[k]], dataBuffer);
+                addRowItem(outDataSet.dataSet[i], dataBuffer);
+                ++i;
+            }
+        }
+    }
+    ++outDataSet.rowCount;
+}
+
+void DataSet::addRow(unsigned int thisColumnIndex,
+            const std::vector<unsigned int>& otherHeaderIndex,
+            const DataSet& other,
+            DataSet& outDataSet,
+            unsigned int otherColumnIndex)
+{
+    unsigned int outHeaderListSize = outDataSet.headerList.size();
+    // set the unique value
+    outDataSet.dataSet[0]->push_back(outDataSet.rowCount);
+    for (unsigned int i = 1; i < outHeaderListSize; ++i) {
+        if ( i >= headerList.size()) {
+            for (unsigned int k = 0; k != otherHeaderIndex.size(); ++k) {
+                // we now bring in data from other
+                DataBuffer outBuffer;
+                if (otherColumnIndex != unsigned(-1)) {
+                    getDatum(otherColumnIndex,
+                             other.dataSet[otherHeaderIndex[k]], outBuffer);
+                }
+                addRowItem(outDataSet.dataSet[i], outBuffer);
+                ++i; // increment i for each k added
+            }
+        }
+        else {
+            DataBuffer outBuffer;
+            getDatum(thisColumnIndex, dataSet[i], outBuffer);
+            addRowItem(outDataSet.dataSet[i], outBuffer);
+        }
+
+    }
+    ++outDataSet.rowCount;
+}
+
 void DataSet::setColumnType(const unsigned int columnType)
 {
     unsigned int currentIndex = dataSet.size()-1;
@@ -254,10 +378,10 @@ void DataSet::processHeader()
     }
 }
 
-unsigned int DataSet::findHeader(const std::string &header)
+unsigned int DataSet::findHeader(const std::string &header) const
 {
-    std::vector<std::string>::iterator iter = headerList.begin();
-    std::vector<std::string>::iterator iterEnd = headerList.end();
+    std::vector<std::string>::const_iterator iter = headerList.begin();
+    std::vector<std::string>::const_iterator iterEnd = headerList.end();
 
     iter = std::find(iter, iterEnd, header);
     if (iter == iterEnd) {
@@ -265,7 +389,8 @@ unsigned int DataSet::findHeader(const std::string &header)
         return -1;
     }
     else {
-        return std::distance(headerList.begin(),iter);
+        std::vector<std::string>::const_iterator start = headerList.begin();
+        return std::distance(start,iter);
     }
 }
 
@@ -293,7 +418,8 @@ unsigned int DataSet::findHeader(const std::string &header)
 //}
 
 std::vector<unsigned int> DataSet::getOtherHeaderIndices(
-        const DataSet& other) {
+        const DataSet& other) const
+{
 
     std::vector<unsigned int> indexList;
     unsigned int otherEnd = other.headerList.size();
@@ -305,13 +431,41 @@ std::vector<unsigned int> DataSet::getOtherHeaderIndices(
 
     for (unsigned int i = 0; i != otherEnd; ++i) {
         iter = headerList.begin();
-        std::find(iter, endIter,other.headerList[i]);
+        iter = std::find(iter, endIter,other.headerList[i]);
         if (iter == endIter) {
             // not found
             indexList.push_back(i);
         }
     }
     return indexList;
+}
+
+std::map<unsigned int, unsigned int> DataSet::getCommonHeaderIndices(
+        const DataSet &other) const
+{
+    // to find the indices of headers common to the two datasets
+    // the key is set to this header's index, while the value is
+    // that of the other
+    std::map<unsigned int, unsigned int> indexMap;
+    if (other.headerList.size() == 0) {
+        return indexMap; // nothing to do
+    }
+
+    unsigned int thisEnd = headerList.size();
+    unsigned int otherEnd = other.headerList.size();
+    unsigned int thisX;
+    unsigned int otherX;
+
+    // we ignore 0 index (UNIQUE_KEY) in both cases
+    for (thisX = 1; thisX != thisEnd; ++thisX ) {
+        for (otherX = 1; otherX != otherEnd; ++otherX) {
+            if (headerList[thisX] == other.headerList[otherX]) {
+                indexMap[thisX] = otherX;
+                continue;
+            }
+        }
+    }
+    return indexMap;
 }
 
 std::vector<unsigned int> DataSet::generateRowPlan(const DataSet &other)
@@ -332,25 +486,41 @@ std::vector<unsigned int> DataSet::generateRowPlan(const DataSet &other)
 void DataSet::setRowPlan(const std::vector<unsigned int> &indexList,
                          std::vector<unsigned int>* rowPlan)
 {
-    if (rowPlan->size() != indexList.size()) {
-        return;
-    }
-    else {
-        std::vector<unsigned int>::const_iterator iter;
-        std::vector<unsigned int>::const_iterator endIter = indexList.end();
+    // values will remain 1 if no corresponding value in indexList
+    // which means those rows have no matches with this
 
-        for (iter = indexList.begin(); iter != endIter; ++iter)
-        {
-            (*rowPlan)[*iter] = 0;
-        }
+    std::vector<unsigned int>::const_iterator iter;
+    std::vector<unsigned int>::const_iterator endIter = indexList.end();
+
+    for (iter = indexList.begin(); iter != endIter; ++iter)
+    {
+        (*rowPlan)[*iter] = 0;
     }
+
     return;
 }
 
-std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
-        DataSet &other, const std::string& columnName, bool onlyUnique)
+std::vector<unsigned int> DataSet::generateMissingIndexList(
+        const std::vector<unsigned int>& rowPlan)
 {
-    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
+    std::vector<unsigned int> missingIndexList;
+    unsigned int end = rowPlan.size();
+    if (end == 0) {
+        return missingIndexList;
+    }
+    for (unsigned int i = 0; i != end; ++i) {
+        if (rowPlan[i] == 1) {
+            missingIndexList.push_back(i);
+        }
+    }
+    return missingIndexList;
+}
+
+void DataSet::match(
+        const DataSet& other, const std::string& columnName,
+        std::map<unsigned int, std::vector<unsigned int> >& mapBuffer,
+        bool onlyUnique)
+{
     unsigned int thisRowIndex = findHeader(columnName);
     unsigned int otherRowIndex = other.findHeader(columnName);
     // book keeping -- record for rows notmatched
@@ -365,7 +535,7 @@ std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
             otherRowIndex == unsigned(-1)) {
         std::cerr << "Error: " << columnName
                   << " is not present in both sets." << std::endl;
-        return mapBuffer;
+        return;
     }
     else if (dataSet[thisRowIndex]->type !=
              other.dataSet[otherRowIndex]->type) {
@@ -389,8 +559,14 @@ std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
                 intIndexList =
                         other.dataSet[otherRowIndex]->findValue(intValue);
                 // use thisUNIQUE_KEY column as map key
-                mapBuffer[dataSet[0]->getIntDatum(thisX)] = intIndexList;
                 setRowPlan(intIndexList, &rowPlan);
+                if (onlyUnique && intIndexList.size() > 1) {
+                    // remove unneeded elements
+                    intIndexList.erase(intIndexList.begin()+1,
+                                       intIndexList.end());
+                }
+                mapBuffer[dataSet[0]->getIntDatum(thisX)] = intIndexList;
+
                 break;
             }
             case DOUBLE: {
@@ -399,8 +575,13 @@ std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
                 dblIndexList =
                         other.dataSet[otherRowIndex]->findValue(dblValue);
                 // use thisUNIQUE_KEY column as map key
-                mapBuffer[dataSet[0]->getIntDatum(thisX)] = dblIndexList;
                 setRowPlan(dblIndexList, &rowPlan);
+                if (onlyUnique && dblIndexList.size() > 1) {
+                    dblIndexList.erase(dblIndexList.begin()+1,
+                                       dblIndexList.end());
+                }
+                mapBuffer[dataSet[0]->getIntDatum(thisX)] = dblIndexList;
+
                 break;
             }
             default: { //STRING
@@ -410,15 +591,125 @@ std::map<unsigned int, std::vector<unsigned int> > DataSet::match(
                 stringIndexList =
                         other.dataSet[otherRowIndex]->findValue(stringValue);
                 // use thisUNIQUE_KEY column as map key
-                mapBuffer[dataSet[0]->getIntDatum(thisX)] = stringIndexList;
                 setRowPlan(stringIndexList, &rowPlan);
+                if (onlyUnique && stringIndexList.size() > 1) {
+                    stringIndexList.erase(stringIndexList.begin()+1,
+                                          stringIndexList.end());
+                }
+                mapBuffer[dataSet[0]->getIntDatum(thisX)] = stringIndexList;
+
                 break;
             }
             }
         }
     }
-    mapBuffer[unsigned(-1)] = rowPlan;
-    return mapBuffer;
+    if (rowPlan.size() != 0) {
+        std::vector<unsigned int> missingIndexList
+                = generateMissingIndexList(rowPlan);
+        mapBuffer[unsigned(-1)] = missingIndexList;
+    }
+
+    return;
+}
+
+void DataSet::generateOutSetHeader(const DataSet &other, DataSet* outDataSet,
+        const std::vector<unsigned int>& otherHeaderIndices,
+                                      unsigned int* outHeaderMergeIndexStore)
+{
+    // make the new header list
+    std::vector<std::string>::const_iterator iter = headerList.begin();
+    std::vector<std::string>::const_iterator endIter = headerList.end();
+    std::vector<std::string> outHeaderList(iter,endIter);
+
+    *outHeaderMergeIndexStore = outHeaderList.size();
+
+    if (otherHeaderIndices.size() > 0) {
+        // include new column names from other
+        for (unsigned int i = 0; i != otherHeaderIndices.size(); ++i)
+        {
+            outHeaderList.push_back(other.headerList[otherHeaderIndices[i]]);
+        }
+    }
+
+    outDataSet->headerList = outHeaderList;
+    outDataSet->processHeader();
+
+
+    return;
+
+}
+
+DataSet DataSet::merge(const DataSet &other, const std::string &columnName,
+                       bool onlyUnique)
+{
+    // Please note: this function requires modification before it may be used
+    // to merge data on a column that comprises non-unique values
+    std::map<unsigned int, std::vector<unsigned int> >  mapBuffer;
+
+    // we populate the map with unique_key id ints from this
+    // and a corresponding vector that contains the matches from other.
+    // stored at key unsigned(-1) is a list of indices corresponding to
+    // any rows that have no matches for this
+    match(other, columnName, mapBuffer, onlyUnique);
+
+    // next we find headList indices from other that do not feature in this
+    std::vector<unsigned int> otherHeaders = getOtherHeaderIndices(other);
+
+
+    // we can now generate our header (keeping note of the merge index with
+    // new headers)
+    unsigned int mergeIndex = 0;
+    DataSet outDataSet;
+    generateOutSetHeader(other, &outDataSet, otherHeaders, &mergeIndex);
+
+
+    // we generate an index map for headers common to both this and other
+    std::map<unsigned int, unsigned int> commonIndexMap =
+            getCommonHeaderIndices(other);
+
+    // we iterate over mapBuffer to get the column index, and corresponding
+    // index for other
+    std::map<unsigned int,
+            std::vector<unsigned int> >::const_iterator matchMapIter;
+    std::map<unsigned int,
+            std::vector<unsigned int> >::const_iterator endMatchMapIter =
+            mapBuffer.end();
+
+    for (matchMapIter = mapBuffer.begin(); matchMapIter != endMatchMapIter;
+         ++matchMapIter)
+    {
+        if (matchMapIter->first == unsigned(-1)) {
+
+            // this corresponds to the list of other unmatched rows
+            std::vector<unsigned int> missingRowIndices = matchMapIter->second;
+            std::vector<unsigned int>::iterator missingIter;
+            std::vector<unsigned int>::iterator endMissingIter =
+                    missingRowIndices.end();
+            for (missingIter = missingRowIndices.begin();
+                 missingIter != endMissingIter; ++missingIter) {
+                addOtherRow(*missingIter, commonIndexMap, otherHeaders,
+                            other, outDataSet);
+            }
+        }
+        else if (matchMapIter->second.size() == 0)
+        {
+
+            // no other rows match with this row
+            addRow(matchMapIter->first, otherHeaders, other, outDataSet);
+        }
+        else {
+            // we have matches with other
+
+
+            addRow(matchMapIter->first, otherHeaders, other, outDataSet,
+                   matchMapIter->second[0]);
+
+        }
+    }
+
+
+    return outDataSet;
+
 }
 
 

@@ -9,6 +9,7 @@
 //#include <functional>
 #include <cctype>       // isspace
 #include <map>
+#include <limits>
 
 namespace mos
 {
@@ -26,10 +27,12 @@ public:
 
     std::vector<std::string> getHeader() const;
     std::vector<std::string> getRow(const unsigned int index) const;
+    unsigned int getSize();
 
     void displaySet(std::ostream& os, const char* delimiter="\t");
 
-    DataSet merge(const DataSet& other, const std::string& columnName);
+    DataSet merge(const DataSet& other, const std::string& columnName,
+                  bool onlyUnique=false);
     DataSet unionSet(const DataSet& other, const std::string& columnName);
     DataSet differenceSet(const DataSet& other, const std::string& columnName);
     DataSet intersectionSet(const DataSet& other,
@@ -43,26 +46,60 @@ private:
      */
     typedef std::shared_ptr<Item> itemVectorPtr;
 
+    struct DataBuffer {
+        int intBuffer;
+        double doubleBuffer;
+        std::string stringBuffer;
+        int setId;
+        DataBuffer()
+            : intBuffer(-1),
+              doubleBuffer(std::numeric_limits<double>::quiet_NaN()),
+              stringBuffer(" "),
+              setId(-1) {}
+    };
+
     void addHeader(const std::string& headerLine);
     void setColumnType(const unsigned int columnType);
+    void addRow(const std::string& lineIn, const char* delimiter);
     void addCell(int cellItem, itemVectorPtr column);
     void addCell(double cellItem, itemVectorPtr column);
-    void addCell(const std::string& cellItem, itemVectorPtr);
-    void addRow(const std::string& lineIn, const char* delimiter);
+    void addCell(const std::string& cellItem, itemVectorPtr column);
+
+    void getDatum(unsigned int index, itemVectorPtr column,
+                  DataBuffer& dataBuffer);
+    void addRowItem(itemVectorPtr outColumn,
+                             const DataBuffer& outBuffer);
+
+    // other columnIndex is set to -1 if N/A
+    void addRow(unsigned int thisColumnIndex,
+                const std::vector<unsigned int>& otherHeaderIndex,
+                const DataSet& other,
+                DataSet& outDataSet,
+                unsigned int otherColumnIndex=-1);
+    void addOtherRow(unsigned int otherColumnIndex,
+                    const std::map<unsigned int, unsigned int>& commonIndexMap,
+                    const std::vector<unsigned>& otherHeaderIndexList,
+                    const DataSet& other, DataSet& outDataSet);
     void addColumn(const unsigned int columnType);
     void processHeader();
+    void generateOutSetHeader(const DataSet& other, DataSet* outDataSet,
+            const std::vector<unsigned int>& headerIndices,
+            unsigned int* outHeaderMergeIndexStore);
 
-    std::map<unsigned int, std::vector<unsigned int> > match(DataSet& other,
-                                              const std::string& columnName,
-                                              bool onlyUnique=false);
+    std::vector<unsigned int> generateMissingIndexList(
+            const std::vector<unsigned int>& rowPlan);
+    void match(const DataSet& other, const std::string& columnName,
+          std::map<unsigned int, std::vector<unsigned int> >& mapBuffer,
+          bool onlyUnique=false);
 
-
-
-    unsigned int findHeader(const std::string& header);
+    unsigned int findHeader(const std::string& header) const;
 
     /// Book-keeping functions:
     /// get indices of columns not present herein
-    std::vector<unsigned int> getOtherColumnIndices(const DataSet& other);
+    std::vector<unsigned int> getOtherHeaderIndices(
+            const DataSet& other) const;
+    std::map<unsigned int, unsigned int> getCommonHeaderIndices(
+            const DataSet& other) const;
 
     /// 0 if row cell value in both sets, else 1
     std::vector<unsigned int> generateRowPlan(const DataSet& other);
