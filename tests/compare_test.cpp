@@ -72,9 +72,6 @@ public:
             testFileStream3 << tlc5 << std::endl;
             testFileStream3.close();
         }
-
-
-
     }
 
     virtual void TearDown()
@@ -138,6 +135,63 @@ TEST_F(CompareTest, MismatchedMergeTest)
     ASSERT_EQ(expectedHeader, outHeader);
     ASSERT_EQ(expectedRow0, row0);
     ASSERT_EQ(expectedRowLast, rowLast);
+}
+
+TEST_F(CompareTest, UnionTest)
+{
+    DataSet dataSet2 = DataSet("fileName2.txt", ",");
+    DataSet dataSet3 = DataSet("fileName3.txt", ",");
+    DataSet outData = dataSet2.unionSet(dataSet3,"number=1");
+    outData.displaySet(std::cout);
+//    std::vector<std::string> outHeader = outData.getHeader();
+//    std::vector<std::string> expectedHeader =
+//         { "UNIQUE_KEY=1", "letter", "number=1", "name", "letterName" };
+//    std::vector<std::string> row0 = outData.getRow(0);
+//    std::vector<std::string> rowLast = outData.getRow(outData.getSize()-1);
+//    std::vector<std::string> expectedRow0 = { "0", "G", "6", "six", "Golf" };
+//    std::vector<std::string> expectedRowLast =
+//       { "6", "F", "-1", " ", "Foxtrot" };
+//    ASSERT_EQ(expectedHeader, outHeader);
+//    ASSERT_EQ(expectedRow0, row0);
+//    ASSERT_EQ(expectedRowLast, rowLast);
+}
+
+TEST_F(CompareTest, DifferenceTest)
+{
+    DataSet dataSet2 = DataSet("fileName2.txt", ",");
+    DataSet dataSet3 = DataSet("fileName3.txt", ",");
+    DataSet outData = dataSet2.differenceSet(dataSet3,"number=1");
+    outData.displaySet(std::cout);
+//    std::vector<std::string> outHeader = outData.getHeader();
+//    std::vector<std::string> expectedHeader =
+//         { "UNIQUE_KEY=1", "letter", "number=1", "name", "letterName" };
+//    std::vector<std::string> row0 = outData.getRow(0);
+//    std::vector<std::string> rowLast = outData.getRow(outData.getSize()-1);
+//    std::vector<std::string> expectedRow0 = { "0", "G", "6", "six", "Golf" };
+//    std::vector<std::string> expectedRowLast =
+//       { "6", "F", "-1", " ", "Foxtrot" };
+//    ASSERT_EQ(expectedHeader, outHeader);
+//    ASSERT_EQ(expectedRow0, row0);
+//    ASSERT_EQ(expectedRowLast, rowLast);
+}
+
+TEST_F(CompareTest, IntersectionTest)
+{
+    DataSet dataSet2 = DataSet("fileName2.txt", ",");
+    DataSet dataSet3 = DataSet("fileName3.txt", ",");
+    DataSet outData = dataSet2.intersectionSet(dataSet3,"number=1");
+    outData.displaySet(std::cout);
+//    std::vector<std::string> outHeader = outData.getHeader();
+//    std::vector<std::string> expectedHeader =
+//         { "UNIQUE_KEY=1", "letter", "number=1", "name", "letterName" };
+//    std::vector<std::string> row0 = outData.getRow(0);
+//    std::vector<std::string> rowLast = outData.getRow(outData.getSize()-1);
+//    std::vector<std::string> expectedRow0 = { "0", "G", "6", "six", "Golf" };
+//    std::vector<std::string> expectedRowLast =
+//       { "6", "F", "-1", " ", "Foxtrot" };
+//    ASSERT_EQ(expectedHeader, outHeader);
+//    ASSERT_EQ(expectedRow0, row0);
+//    ASSERT_EQ(expectedRowLast, rowLast);
 }
 
 

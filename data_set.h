@@ -33,10 +33,13 @@ public:
 
     DataSet merge(const DataSet& other, const std::string& columnName,
                   bool onlyUnique=false);
-    DataSet unionSet(const DataSet& other, const std::string& columnName);
-    DataSet differenceSet(const DataSet& other, const std::string& columnName);
+    DataSet unionSet(const DataSet& other, const std::string& columnName,
+                     bool onlyUnique=true);
+    DataSet differenceSet(const DataSet& other, const std::string& columnName,
+                          bool onlyUnique=true);
     DataSet intersectionSet(const DataSet& other,
-                            const std::string& columnName);
+                            const std::string& columnName,
+                            bool onlyUnique=true);
 
 private:
     /**
@@ -108,6 +111,14 @@ private:
 
     std::string getDatum(std::shared_ptr<Item> cellPtr,
                          unsigned int index);
+
+    DataSet generateSet(const DataSet &other, const std::string &columnName,
+            std::map<unsigned int, std::vector<unsigned int> >* matchBuffer,
+            bool onlyUnique);
+
+    void addSetColumn(DataSet& outputSet, itemVectorPtr column,
+                      std::vector<unsigned int> indexList);
+
     enum columnType
     {
         STRING = 0, INT = 1, DOUBLE = 2

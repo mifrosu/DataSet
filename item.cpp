@@ -60,6 +60,7 @@ std::vector<char> StringColumn::getUniquePlan() {
     {
         int myCount = std::count(data.begin()+i,data.end(),data[i]);
         if (myCount > 1) {
+            // not unique
             plan.push_back('n');
         }
         else {
@@ -103,6 +104,24 @@ std::vector<unsigned int> StringColumn::findValue(const std::string& value)
 void StringColumn::getData(std::vector<std::string> &store)
 {
     store = data;
+}
+
+void StringColumn::makeSetUnique()
+{
+    std::vector<char> plan = getUniquePlan();
+    std::vector<std::string> temp;
+    unsigned int end = data.size();
+    if (plan.size() != end) {
+        return;
+    }
+    else {
+        for (unsigned int i = 0; i != end; ++i ) {
+            if (plan[i] == 'y') {
+                temp.push_back(data[i]);
+            }
+        }
+    }
+    std::swap(data,temp);
 }
 
 
@@ -166,6 +185,24 @@ std::vector<unsigned int> IntColumn::findValue(int value)
 void IntColumn::getData(std::vector<int> &store)
 {
     store = data;
+}
+
+void IntColumn::makeSetUnique()
+{
+    std::vector<char> plan = getUniquePlan();
+    std::vector<int> temp;
+    unsigned int end = data.size();
+    if (plan.size() != end) {
+        return;
+    }
+    else {
+        for (unsigned int i = 0; i != end; ++i ) {
+            if (plan[i] == 'y') {
+                temp.push_back(data[i]);
+            }
+        }
+    }
+    std::swap(data,temp);
 }
 
 // --- DoubleColumn
@@ -288,6 +325,24 @@ std::vector<unsigned int> DoubleColumn::findValue(double value,
 void DoubleColumn::getData(std::vector<double> &store)
 {
     store = data;
+}
+
+void DoubleColumn::makeSetUnique()
+{
+    std::vector<char> plan = getUniquePlan();
+    std::vector<double> temp;
+    unsigned int end = data.size();
+    if (plan.size() != end) {
+        return;
+    }
+    else {
+        for (unsigned int i = 0; i != end; ++i ) {
+            if (plan[i] == 'y') {
+                temp.push_back(data[i]);
+            }
+        }
+    }
+    std::swap(data,temp);
 }
 
 

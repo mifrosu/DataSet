@@ -712,7 +712,148 @@ DataSet DataSet::merge(const DataSet &other, const std::string &columnName,
 
 }
 
+DataSet DataSet::generateSet(
+        const DataSet &other, const std::string &columnName,
+        std::map<unsigned int, std::vector<unsigned int> >* matchBuffer,
+        bool onlyUnique) {
 
+    // first we generate a match map
+    match(other, columnName, *matchBuffer, onlyUnique);
 
+    DataSet outputSet;
+    outputSet.headerList.push_back(columnName);
+    outputSet.processHeader();
+    return outputSet;
+
+}
+
+void DataSet::addSetColumn(DataSet& outputSet, itemVectorPtr column,
+                           std::vector<unsigned int> indexList)
+{
+    std::vector<unsigned int>::const_iterator iter;
+    std::vector<unsigned int>::const_iterator endIter = indexList.end();
+
+    for (iter=indexList.begin(); iter!=endIter; ++iter) {
+        DataBuffer dataBuffer;
+        getDatum(*iter, column, dataBuffer);
+        addRowItem(outputSet.dataSet[0], dataBuffer);
+    }
+}
+
+DataSet DataSet::unionSet(const DataSet &other, const std::string &columnName,
+                          bool onlyUnique)
+{
+    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
+    DataSet output = generateSet(other, columnName, &mapBuffer, onlyUnique);
+
+    // we need the indices that correspond to columnName in the two dataSets
+    unsigned int thisRowIndex = findHeader(columnName);
+    unsigned int otherRowIndex = other.findHeader(columnName);
+
+    std::map<unsigned int, std::vector<unsigned int> >::const_iterator
+            mapIter;
+    std::map<unsigned int, std::vector<unsigned int> >::const_iterator
+            endMapIter = mapBuffer.end();
+
+    std::vector<unsigned int> otherUnmatchedIndices;
+    std::vector<unsigned int> thisIndexList;
+
+    for (mapIter = mapBuffer.begin(); mapIter != endMapIter;
+         ++mapIter)
+    {
+        if (mapIter->first == unsigned(-1)) {
+
+            otherUnmatchedIndices = mapIter->second;
+
+        }
+        else {
+            thisIndexList.push_back(mapIter->first);
+        }
+    }
+    addSetColumn(output, dataSet[thisRowIndex],thisIndexList);
+    addSetColumn(output, other.dataSet[otherRowIndex], otherUnmatchedIndices);
+    output.dataSet[0]->makeSetUnique();
+    output.rowCount = dataSet[0]->size();
+
+    return output;
+
+}
+
+DataSet DataSet::differenceSet(const DataSet &other,
+                               const std::string &columnName, bool onlyUnique)
+{
+    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
+    DataSet output = generateSet(other, columnName, &mapBuffer, onlyUnique);
+
+    // we need the indices that correspond to columnName in the two dataSets
+    unsigned int thisRowIndex = findHeader(columnName);
+    unsigned int otherRowIndex = other.findHeader(columnName);
+
+    std::map<unsigned int, std::vector<unsigned int> >::const_iterator
+            mapIter;
+    std::map<unsigned int, std::vector<unsigned int> >::const_iterator
+            endMapIter = mapBuffer.end();
+
+    std::vector<unsigned int> otherUnmatchedIndices;
+    std::vector<unsigned int> thisIndexList;
+
+    for (mapIter = mapBuffer.begin(); mapIter != endMapIter;
+         ++mapIter)
+    {
+        if (mapIter->first == unsigned(-1)) {
+
+            otherUnmatchedIndices = mapIter->second;
+
+        }
+        else if (mapIter->second.size() == 0){
+            // we want indices that have no matches
+            thisIndexList.push_back(mapIter->first);
+        }
+    }
+    addSetColumn(output, dataSet[thisRowIndex],thisIndexList);
+    addSetColumn(output, other.dataSet[otherRowIndex], otherUnmatchedIndices);
+    output.dataSet[0]->makeSetUnique();
+    output.rowCount = dataSet[0]->size();
+
+    return output;
+
+}
+
+DataSet DataSet::intersectionSet(const DataSet &other,
+                               const std::string &columnName, bool onlyUnique)
+{
+    std::map<unsigned int, std::vector<unsigned int> > mapBuffer;
+    DataSet output = generateSet(other, columnName, &mapBuffer, onlyUnique);
+
+    // we need the indices that correspond to columnName in the two dataSets
+    unsigned int thisRowIndex = findHeader(columnName);
+
+    std::map<unsigned int, std::vector<unsigned int> >::const_iterator
+            mapIter;
+    std::map<unsigned int, std::vector<unsigned int> >::const_iterator
+            endMapIter = mapBuffer.end();
+
+    std::vector<unsigned int> thisIndexList;
+
+    for (mapIter = mapBuffer.begin(); mapIter != endMapIter;
+         ++mapIter)
+    {
+        if (mapIter->first == unsigned(-1)) {
+            // we don't want unmatched sets
+            continue;
+
+        }
+        else if (mapIter->second.size() > 0){
+            // we want indices that have matches
+            thisIndexList.push_back(mapIter->first);
+        }
+    }
+    addSetColumn(output, dataSet[thisRowIndex],thisIndexList);
+    output.dataSet[0]->makeSetUnique();
+    output.rowCount = dataSet[0]->size();
+
+    return output;
+
+}
 
 }

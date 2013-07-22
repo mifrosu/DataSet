@@ -31,6 +31,7 @@ public:
     virtual void getData(std::vector<std::string>& store) {}
     virtual void getData(std::vector<int>& store) {}
     virtual void getData(std::vector<double>& store) {}
+    virtual void makeSetUnique() {}
 
     enum typeId {
         STRING = 0, INT = 1, DOUBLE = 2
@@ -48,6 +49,8 @@ public:
     std::vector<char> getUniquePlan();
     std::vector<unsigned int> findValue(const std::string &value);
     void getData(std::vector<std::string> &store);
+    void makeSetUnique();
+
 private:
     std::vector<std::string> data;
 
@@ -63,6 +66,7 @@ public:
     std::vector<char> getUniquePlan();
     std::vector<unsigned int> findValue(int value);
     void getData(std::vector<int> &store);
+    void makeSetUnique();
 private:
     std::vector<int> data;
 
@@ -78,6 +82,7 @@ public:
     std::vector<char> getUniquePlan();
     std::vector<unsigned int> findValue(double value);
     void getData(std::vector<double> &store);
+    void makeSetUnique();
 private:
 
     std::vector<unsigned int> findValue(double value,
