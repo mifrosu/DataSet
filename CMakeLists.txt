@@ -3,7 +3,7 @@ project(data_set)
 
 set(project_SRCS main.cpp data_set.cpp item.cpp string_clean.cpp)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -lboost_program_options")
 
 add_executable(${PROJECT_NAME} ${project_SRCS})
 

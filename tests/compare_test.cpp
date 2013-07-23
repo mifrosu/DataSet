@@ -179,7 +179,7 @@ TEST_F(CompareTest, IntersectionTest)
 {
     DataSet dataSet2 = DataSet("fileName2.txt", ",");
     DataSet dataSet3 = DataSet("fileName3.txt", ",");
-    DataSet outData = dataSet2.intersectionSet(dataSet3,"number=1");
+    DataSet outData = dataSet2.intersectionSet(dataSet3,"letter");
     outData.displaySet(std::cout);
 //    std::vector<std::string> outHeader = outData.getHeader();
 //    std::vector<std::string> expectedHeader =
