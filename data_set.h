@@ -20,16 +20,16 @@ class DataSet
 public:
 
     DataSet();
-    DataSet(const std::string& fileName, const char* delimiter="\t");
+    DataSet(const std::string& fileName, const char* delimiter=",");
 
-    void addFile(const std::string& fileName, const char* delimiter="\t");
+    void addFile(const std::string& fileName, const char* delimiter=",");
     void clearSet();
 
     std::vector<std::string> getHeader() const;
     std::vector<std::string> getRow(const unsigned int index) const;
     unsigned int getSize();
 
-    void displaySet(std::ostream& os, const char* delimiter="\t");
+    void displaySet(std::ostream& os, const char* delimiter=",");
 
     DataSet merge(const DataSet& other, const std::string& columnName,
                   bool onlyUnique=false);

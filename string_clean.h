@@ -10,7 +10,7 @@ namespace mos {
 
 
 void split(const std::string& inString, std::vector<std::string>* store,
-           const char* delimiter="\t");
+           const char* delimiter=",");
 
 /// in-place strip terminal whitespace
 void strip(std::string* inString);

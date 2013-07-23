@@ -76,23 +76,23 @@ public:
 
     virtual void TearDown()
     {
-        int returnCode = std::remove(fileName1.c_str());
-        if (returnCode != 0) {
-            std::cout << "There was a problem deleting "
-                      << fileName1 << std::endl;
-        }
+//        int returnCode = std::remove(fileName1.c_str());
+//        if (returnCode != 0) {
+//            std::cout << "There was a problem deleting "
+//                      << fileName1 << std::endl;
+//        }
 
-        returnCode = std::remove(fileName2.c_str());
-        if (returnCode != 0) {
-            std::cout << "There was a pronumberblem deleting "
-                      << fileName2 << std::endl;
-        }
+//        returnCode = std::remove(fileName2.c_str());
+//        if (returnCode != 0) {
+//            std::cout << "There was a pronumberblem deleting "
+//                      << fileName2 << std::endl;
+//        }
 
-        returnCode = std::remove(fileName3.c_str());
-        if (returnCode != 0) {
-            std::cout << "There was a problem deleting "
-                      << fileName3 << std::endl;
-        }
+//        returnCode = std::remove(fileName3.c_str());
+//        if (returnCode != 0) {
+//            std::cout << "There was a problem deleting "
+//                      << fileName3 << std::endl;
+//        }
 
     }
 

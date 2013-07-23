@@ -76,7 +76,10 @@ std::vector<std::string> DataSet::getRow(const unsigned int index) const
 
 unsigned int DataSet::getSize()
 {
-    return dataSet[0]->size();
+    if (dataSet.size() != 0) {
+        return dataSet[0]->size();
+    }
+    else {return 0;}
 }
 
 void DataSet::displaySet(std::ostream &os, const char* delimiter)
@@ -355,9 +358,8 @@ void DataSet::processHeader()
         std::vector<std::string>::const_iterator iter;
         std::vector<std::string>::const_iterator iterEnd = headerList.end();
         for (iter = headerList.begin(); iter != iterEnd; ++iter) {
-            assert((*iter).size() > 2);
             unsigned int k = iter->size();
-            if ((*iter)[k-2] == '=') {
+            if ((*iter).size() > 2 && (*iter)[k-2] == '=') {
                 unsigned int typeId = 0;
                 try {
                     typeId = boost::lexical_cast<unsigned int>(
