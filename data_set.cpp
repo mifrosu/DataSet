@@ -396,28 +396,6 @@ unsigned int DataSet::findHeader(const std::string &header) const
     }
 }
 
-//void DataSet::findUnique(std::vector<char> *store,
-//                         unsigned int rowIndex)
-//{
-//    store->clear();
-//    unsigned int columnDepth = dataSet[0]->size();
-//    if (columnDepth == 0) {
-//        return;
-//    }
-//    for (unsigned int k = 0; k != columnDepth; ++k)
-//    {
-//        store->push_back('y');
-//    }
-//    switch (dataSet[rowIndex]->type) {
-//    case DOUBLE:
-
-
-//        break;
-//    default:
-//        break;
-//    }
-
-//}
 
 std::vector<unsigned int> DataSet::getOtherHeaderIndices(
         const DataSet& other) const

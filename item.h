@@ -88,8 +88,7 @@ private:
     std::vector<unsigned int> findValue(double value,
                                  bool (*compare)(double, double));
     std::vector<double> data;
-    private:
-        double val, delta;
+    double val, delta;
 
 };
 
